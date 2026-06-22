@@ -1,21 +1,34 @@
-# bun-react-template
+﻿# LearnByDoing
 
-To install dependencies:
+LearnByDoing is a free interactive engineering learning platform focused on DSA lessons that combine reading, editable code, and deterministic visualizations.
+
+## Project docs
+
+- [Product requirements](docs/prd/README.md)
+- [DSA lesson outline](docs/dsa-lesson-outline.md)
+
+## Development
+
+Install dependencies:
 
 ```bash
 bun install
 ```
 
-To start a development server:
+Start the development server:
 
 ```bash
 bun dev
 ```
 
-To run for production:
+Run quality checks:
+
+```bash
+bun run check
+```
+
+Run for production:
 
 ```bash
 bun start
 ```
-
-This project was created using `bun init` in bun v1.3.14. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.

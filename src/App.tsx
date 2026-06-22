@@ -1,39 +1,83 @@
 ﻿import "./index.css";
+import { getLessonByPath, lessonCards } from "./features/lessons/lessonRegistry";
+import type { LessonCardEntry } from "./features/lessons/types";
+import { useRoute } from "./useRoute";
 
 const outcomes = [
+  { value: "Free", label: "for learners" },
   { value: "3", label: "learning modes" },
-  { value: "42", label: "planned DSA labs" },
-  { value: "60%+", label: "completion target" },
+  { value: "DSA", label: "practice path" },
 ];
 
 const learningFlow = [
   {
     step: "Read",
-    title: "Dense concepts, made scannable",
-    body: "Every lesson opens with crisp mental models, interview framing, and the exact invariants learners need to keep in view.",
+    title: "Start with the idea",
+    body: "Each lesson explains the mental model, the useful invariants, and the small details that make an algorithm click.",
   },
   {
     step: "Code",
-    title: "Edit the algorithm in place",
-    body: "A focused sandbox keeps examples live, recoverable, and close to the explanation so practice starts immediately.",
+    title: "Practice beside the explanation",
+    body: "Editable examples let learners change the code, reset it, and try the pattern while the concept is still fresh.",
   },
   {
     step: "See",
-    title: "Watch state move step by step",
-    body: "Visualizers sync pointers, queues, swaps, and visited sets with code so invisible algorithm state becomes obvious.",
+    title: "Watch the state change",
+    body: "Visualizers make pointers, queues, swaps, and visited sets visible so learners can connect code to behavior.",
   },
 ];
 
-const modules = ["Arrays", "Sorting", "Graphs", "Trees", "Dynamic programming", "Interview drills"];
-
 const features = [
-  "Reusable lesson engine for new topic packs",
-  "Local progress that survives every practice session",
-  "JS and TS first examples with resettable templates",
+  "Free access for learners",
+  "Local progress that stays on the device",
+  "JS and TS examples with resettable templates",
   "Responsive study mode for desktop and mobile",
 ];
 
-export function App() {
+function LessonCard({ lesson }: { lesson: LessonCardEntry }) {
+  const inner = (
+    <>
+      <div className="lcard-header">
+        <span className="lcard-module">{lesson.module}</span>
+        <span className="lcard-number">#{lesson.number}</span>
+      </div>
+      <h3 className="lcard-title">{lesson.title}</h3>
+      <p className="lcard-description">{lesson.description}</p>
+      <div className="lcard-tags">
+        {lesson.tags.map((tag) => (
+          <span key={tag} className="lcard-tag">{tag}</span>
+        ))}
+      </div>
+      <span className={`lcard-action ${lesson.available ? "" : "locked"}`}>
+        {lesson.available ? "Start lesson ->" : "Coming soon"}
+      </span>
+    </>
+  );
+
+  if (lesson.available) {
+    return (
+      <a
+        href={`#/lessons/${lesson.slug}`}
+        className="lesson-card available"
+        id={`lesson-${lesson.slug}`}
+      >
+        {inner}
+      </a>
+    );
+  }
+
+  return (
+    <div className="lesson-card locked" id={`lesson-${lesson.slug}`}>
+      {inner}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Landing page                                                       */
+/* ------------------------------------------------------------------ */
+
+function LandingPage() {
   return (
     <main className="landing-page">
       <section className="hero-section" aria-labelledby="hero-title">
@@ -45,23 +89,23 @@ export function App() {
           <div className="nav-links" aria-label="Page sections">
             <a href="#flow">Flow</a>
             <a href="#modules">Modules</a>
-            <a href="#pricing">Access</a>
+            <a href="#free">Free</a>
           </div>
-          <a className="nav-action" href="#pricing">Start learning</a>
+          <a className="nav-action" href="#modules">Browse lessons</a>
         </nav>
 
         <div className="hero-grid" id="top">
           <div className="hero-copy">
-            <p className="eyebrow">Interactive DSA mastery</p>
+            <p className="eyebrow">Free interactive DSA learning</p>
             <h1 id="hero-title">Learn algorithms by reading, coding, and seeing them run.</h1>
             <p className="hero-lede">
-              A premium learning workspace for students, self-taught engineers, and interview prep cohorts who need more than static notes.
+              A focused learning workspace for students and self-taught engineers who want to understand data structures and algorithms by doing.
             </p>
-            <div className="hero-actions" aria-label="Primary calls to action">
-              <a className="button primary" href="#pricing">Get early access</a>
-              <a className="button secondary" href="#flow">Explore the method</a>
+            <div className="hero-actions" aria-label="Primary page links">
+              <a className="button primary" href="#modules">Start learning</a>
+              <a className="button secondary" href="#flow">See how it works</a>
             </div>
-            <dl className="outcome-strip" aria-label="Platform outcomes">
+            <dl className="outcome-strip" aria-label="Platform highlights">
               {outcomes.map((outcome) => (
                 <div key={outcome.label}>
                   <dt>{outcome.value}</dt>
@@ -71,7 +115,7 @@ export function App() {
             </dl>
           </div>
 
-          <aside className="product-preview" aria-label="LearnByDoing product preview">
+          <aside className="product-preview" aria-label="LearnByDoing lesson preview">
             <div className="preview-toolbar">
               <span />
               <span />
@@ -111,17 +155,17 @@ export function App() {
       </section>
 
       <section className="logo-band" aria-label="Audience groups">
-        <span>Built for CS students</span>
+        <span>CS students</span>
         <span>Self-taught engineers</span>
-        <span>Interview cohorts</span>
-        <span>Teaching teams</span>
+        <span>Interview practice</span>
+        <span>Classroom-friendly</span>
       </section>
 
       <section className="section-shell" id="flow" aria-labelledby="flow-title">
         <div className="section-heading">
           <p className="eyebrow">The lesson loop</p>
-          <h2 id="flow-title">One workspace for the full learning motion.</h2>
-          <p>No context switching between docs, editors, and animation tools. LearnByDoing keeps the explanation, sandbox, and visualization in sync.</p>
+          <h2 id="flow-title">One place to read, practice, and visualize.</h2>
+          <p>No switching between notes, editors, and animation tools. LearnByDoing keeps the explanation, sandbox, and visualizer together.</p>
         </div>
         <div className="flow-grid">
           {learningFlow.map((item) => (
@@ -134,22 +178,24 @@ export function App() {
         </div>
       </section>
 
-      <section className="module-band" id="modules" aria-labelledby="modules-title">
-        <div>
-          <p className="eyebrow">Launch curriculum</p>
-          <h2 id="modules-title">DSA foundations with room to grow.</h2>
-          <p>The first release proves the core lesson engine with algorithm topics learners actually need. The same system can power new engineering domains later.</p>
+      <section className="section-shell" id="modules" aria-labelledby="modules-title">
+        <div className="section-heading">
+          <p className="eyebrow">Current curriculum</p>
+          <h2 id="modules-title">DSA foundations, one concept at a time.</h2>
+          <p>Start with common algorithm patterns and build understanding through short lessons, editable code, and visual feedback.</p>
         </div>
-        <div className="module-list" aria-label="Available modules">
-          {modules.map((module) => <span key={module}>{module}</span>)}
+        <div className="lessons-grid" aria-label="Available lessons">
+          {lessonCards.map((lesson) => (
+            <LessonCard key={lesson.slug} lesson={lesson} />
+          ))}
         </div>
       </section>
 
       <section className="section-shell split-section" aria-labelledby="platform-title">
         <div className="section-heading align-left">
-          <p className="eyebrow">Platform quality</p>
-          <h2 id="platform-title">Designed like a serious study tool, not a toy demo.</h2>
-          <p>Fast, calm, and focused enough for daily practice, with the structure maintainers need to add lessons without rebuilding the shell.</p>
+          <p className="eyebrow">Learning space</p>
+          <h2 id="platform-title">Built for steady practice.</h2>
+          <p>Fast, calm, and focused enough for daily study, with lessons that stay close to the code and the visual state learners need to reason about.</p>
         </div>
         <div className="feature-list">
           {features.map((feature) => (
@@ -161,18 +207,33 @@ export function App() {
         </div>
       </section>
 
-      <section className="cta-section" id="pricing" aria-labelledby="cta-title">
+      <section className="cta-section" id="free" aria-labelledby="free-title">
         <div>
-          <p className="eyebrow">Early access</p>
-          <h2 id="cta-title">Start with the DSA lab. Expand into a full engineering academy.</h2>
-          <p>Get the premium landing experience ready for product validation, waitlist collection, and investor demos.</p>
+          <p className="eyebrow">Always free</p>
+          <h2 id="free-title">Open learning for anyone practicing DSA.</h2>
+          <p>No payment or account required. Pick a topic, study the idea, edit the code, and watch the algorithm move.</p>
         </div>
-        <a className="button primary" href="mailto:hello@learnbydoing.dev">Request access</a>
+        <a className="button primary" href="#modules">Choose a module</a>
       </section>
     </main>
   );
 }
 
-export default App;
+/* ------------------------------------------------------------------ */
+/*  Router wrapper                                                     */
+/* ------------------------------------------------------------------ */
 
+export function App() {
+  const route = useRoute();
+  const lesson = getLessonByPath(route);
+
+  if (lesson) {
+    const LessonPage = lesson.PageComponent;
+    return <LessonPage lesson={lesson} />;
+  }
+
+  return <LandingPage />;
+}
+
+export default App;
 
