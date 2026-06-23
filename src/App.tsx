@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./index.css";
 import {
   curriculumStages,
@@ -140,6 +141,20 @@ function CurriculumStageSection({ stage }: { stage: CurriculumStage }) {
 }
 
 function LandingPage() {
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const id = hash.slice(1);
+      const timer = setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <>
     <a className="skip-link" href="#main-content">Skip to Main Content</a>
@@ -217,12 +232,6 @@ function LandingPage() {
         </div>
       </section>
 
-      <section className="logo-band" aria-label="Curriculum stages">
-        {curriculumStages.map((stage) => (
-          <a key={stage.slug} href={`#stage-${stage.slug}`}>Stage {stage.number}: {stage.title}</a>
-        ))}
-      </section>
-
       <section className="section-shell" id="flow" aria-labelledby="flow-title">
         <div className="section-heading">
           <p className="eyebrow">The lesson loop</p>
@@ -246,11 +255,6 @@ function LandingPage() {
           <h2 id="path-title">Lessons follow the outline from foundations to advanced patterns.</h2>
           <p>{availableLessonCount} lessons are live now. The remaining cards show the planned sequence so the site navigation matches the curriculum path.</p>
         </div>
-        <nav className="stage-pill-nav" aria-label="Curriculum stage shortcuts">
-          {curriculumStages.map((stage) => (
-            <a key={stage.slug} href={`#stage-${stage.slug}`}>Stage {stage.number}</a>
-          ))}
-        </nav>
         <div className="curriculum-stack">
           {curriculumStages.map((stage) => (
             <CurriculumStageSection key={stage.slug} stage={stage} />

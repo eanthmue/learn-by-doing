@@ -33,6 +33,14 @@ function formatTraceValue(value: string | number | boolean | null) {
 }
 
 function LessonNav({ lesson }: { lesson: LessonDefinition }) {
+  const STAGE_SLUGS: Record<number, string> = {
+    1: "foundations",
+    2: "linear-data-structures",
+    3: "sorting-searching-hashing",
+    4: "non-linear-data-structures",
+    5: "advanced-algorithmic-patterns",
+  };
+
   return (
     <nav className="lesson-nav" aria-label="Lesson navigation">
       <a className="lesson-nav-brand" href="#/" aria-label="Back to home">
@@ -42,9 +50,9 @@ function LessonNav({ lesson }: { lesson: LessonDefinition }) {
       <div className="lesson-nav-trail">
         <a href="#/">Home</a>
         <span aria-hidden="true">&gt;</span>
-        <span>{lesson.stage}</span>
+        <a href={`#stage-${STAGE_SLUGS[lesson.stageNumber] || "foundations"}`}>{lesson.stage}</a>
         <span aria-hidden="true">&gt;</span>
-        <span>{lesson.module}</span>
+        <a href={`#module-${lesson.moduleSlug}`}>{lesson.module}</a>
         <span aria-hidden="true">&gt;</span>
         <span className="trail-current">{lesson.title}</span>
       </div>
