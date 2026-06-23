@@ -64,7 +64,7 @@ function LessonCard({ lesson }: { lesson: LessonCardEntry }) {
         ))}
       </div>
       <span className={`lcard-action ${lesson.available ? "" : "locked"}`}>
-        {lesson.available ? "Start lesson ->" : "Coming soon"}
+        {lesson.available ? "Start Lesson" : "Coming Soon"}
       </span>
     </>
   );
@@ -136,7 +136,9 @@ function CurriculumStageSection({ stage }: { stage: CurriculumStage }) {
 
 function LandingPage() {
   return (
-    <main className="landing-page">
+    <>
+    <a className="skip-link" href="#main-content">Skip to Main Content</a>
+    <main className="landing-page" id="main-content">
       <section className="hero-section" aria-labelledby="hero-title">
         <nav className="top-nav" aria-label="Main navigation">
           <a className="brand" href="#top" aria-label="LearnByDoing home">
@@ -148,7 +150,7 @@ function LandingPage() {
             <a href="#path">Path</a>
             <a href="#practice">Practice</a>
           </div>
-          <a className="nav-action" href="#path">Browse path</a>
+          <a className="nav-action" href="#path">Browse Path</a>
         </nav>
 
         <div className="hero-grid" id="top">
@@ -159,8 +161,8 @@ function LandingPage() {
               LearnByDoing now follows the full DSA roadmap: foundations, linear structures, sorting and hashing, trees and graphs, then advanced patterns.
             </p>
             <div className="hero-actions" aria-label="Primary page links">
-              <a className="button primary" href="#path">Start the path</a>
-              <a className="button secondary" href="#flow">See the lesson loop</a>
+              <a className="button primary" href="#path">Start the Path</a>
+              <a className="button secondary" href="#flow">See the Lesson Loop</a>
             </div>
             <dl className="outcome-strip" aria-label="Curriculum highlights">
               {outcomes.map((outcome) => (
@@ -273,9 +275,10 @@ function LandingPage() {
           <h2 id="free-title">Pick the first live lesson and keep moving through the path.</h2>
           <p>No payment or account required. Start with arrays today, then the navigation already shows where the curriculum grows next.</p>
         </div>
-        <a className="button primary" href="#lesson-array-traversal">Start arrays</a>
+        <a className="button primary" href="#lesson-array-traversal">Start Arrays</a>
       </section>
     </main>
+    </>
   );
 }
 

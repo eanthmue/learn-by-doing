@@ -216,7 +216,7 @@ function CodeSandbox({ starterCode, traceStep }: { starterCode: string; traceSte
             disabled={isRunning}
             aria-label="Run code"
           >
-            {isRunning ? "Running" : "Run"}
+            {isRunning ? "Running…" : "Run"}
           </button>
         </div>
       </div>
@@ -245,11 +245,13 @@ function CodeSandbox({ starterCode, traceStep }: { starterCode: string; traceSte
         {output.length > 0 ? (
           output.map((line, index) => <pre key={`${index}-${line}`}>{line}</pre>)
         ) : (
-          <pre className="output-placeholder">Click "Run" to see output</pre>
+          <pre className="output-placeholder">Click “Run” to see output</pre>
         )}
       </div>
       <textarea
         className="sandbox-editor"
+        name="lesson-code"
+        autoComplete="off"
         value={code}
         onChange={(event) => setCode(event.target.value)}
         spellCheck={false}
@@ -289,13 +291,14 @@ export function LessonPage({ lesson }: LessonPageProps) {
 
   return (
     <div className="lesson-page">
+      <a className="skip-link" href="#lesson-main">Skip to Lesson Content</a>
       <LessonNav lesson={lesson} />
       <nav className="lesson-jump-nav" aria-label="Lesson workspace sections">
         <button type="button" onClick={() => scrollToLessonSection("lesson-concept")}>Concept</button>
         <button type="button" onClick={() => scrollToLessonSection("lesson-visualizer")}>Visual</button>
         <button type="button" onClick={() => scrollToLessonSection("lesson-code")}>Code</button>
       </nav>
-      <div className="lesson-layout">
+      <main className="lesson-layout" id="lesson-main">
         <div className="lesson-left" id="lesson-concept">
           <ConceptPanel lesson={lesson} />
         </div>
@@ -312,7 +315,7 @@ export function LessonPage({ lesson }: LessonPageProps) {
             <CodeSandbox starterCode={lesson.starterCode} traceStep={currentTraceStep} />
           </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
