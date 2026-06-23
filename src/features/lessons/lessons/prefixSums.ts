@@ -1,4 +1,4 @@
-﻿import { LessonPage } from "../LessonPage";
+import { LessonPage } from "../LessonPage";
 import type { LessonContent, LessonDefinition, VisualizerStep } from "../types";
 import { PrefixSumsVisualizer } from "../visualizers/PrefixSumsVisualizer";
 
@@ -169,6 +169,11 @@ function buildPrefixSumSteps(values: number[]): VisualizerStep[] {
       activeIndex: null,
       total: 0,
       description: "Start with prefix[0] = 0 before reading any values.",
+      codeLine: 2,
+      variables: {
+        prefix: "[0]",
+        running: 0,
+      },
       prefixValues: [...prefixValues],
       prefixIndex: 0,
     },
@@ -183,6 +188,13 @@ function buildPrefixSumSteps(values: number[]): VisualizerStep[] {
       activeIndex: index,
       total: running,
       description: `prefix[${index + 1}] = prefix[${index}] (${previous}) + nums[${index}] (${value}) -> ${running}`,
+      codeLine: 5,
+      variables: {
+        i: index,
+        "nums[i]": value,
+        "prefix[i]": previous,
+        "prefix[i + 1]": running,
+      },
       prefixValues: [...prefixValues],
       prefixIndex: index + 1,
     });
@@ -200,6 +212,13 @@ function buildPrefixSumSteps(values: number[]): VisualizerStep[] {
     activeIndex: null,
     total: running,
     description: `To sum nums[${query.left}..${query.right}], subtract the prefix before the range from the prefix after it.`,
+    codeLine: 12,
+    variables: {
+      left: query.left,
+      right: query.right,
+      "prefix[left]": prefixValues[query.startPrefixIndex] ?? "?",
+      "prefix[right + 1]": prefixValues[query.endPrefixIndex] ?? "?",
+    },
     prefixValues: [...prefixValues],
     prefixIndex: null,
     queryRange: query,
@@ -209,6 +228,12 @@ function buildPrefixSumSteps(values: number[]): VisualizerStep[] {
     activeIndex: null,
     total: result,
     description: `prefix[${query.endPrefixIndex}] (${prefixValues[query.endPrefixIndex]}) - prefix[${query.startPrefixIndex}] (${prefixValues[query.startPrefixIndex]}) = ${result}.`,
+    codeLine: 12,
+    variables: {
+      left: query.left,
+      right: query.right,
+      result,
+    },
     prefixValues: [...prefixValues],
     prefixIndex: null,
     queryRange: { ...query, result },
@@ -216,12 +241,16 @@ function buildPrefixSumSteps(values: number[]): VisualizerStep[] {
 
   return steps;
 }
-
 export const prefixSumsLesson: LessonDefinition = {
   slug: "prefix-sums",
   title: "Prefix Sums",
-  module: "Arrays & Strings",
-  number: 2,
+  stage: "Linear Data Structures",
+  stageNumber: 2,
+  module: "Arrays and Strings",
+  moduleSlug: "arrays-and-strings",
+  moduleOrder: 1,
+  number: 4,
+  lessonOrder: 2,
   description: "Build a running total array and answer range-sum queries in constant time.",
   tags: ["O(n)", "precompute", "range query"],
   available: true,

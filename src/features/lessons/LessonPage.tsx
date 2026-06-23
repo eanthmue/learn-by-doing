@@ -1,6 +1,6 @@
-﻿import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { runUserCode } from "../sandbox/runUserCode";
-import type { LessonDefinition, LessonPageProps, RichText, TextSegment } from "./types";
+import type { LessonDefinition, LessonPageProps, RichText, TextSegment, VisualizerStep } from "./types";
 
 function renderSegment(segment: TextSegment, index: number): ReactNode {
   if (typeof segment === "string") {
@@ -22,6 +22,14 @@ function RichTextView({ content }: { content: RichText }) {
   return <>{content.map(renderSegment)}</>;
 }
 
+function formatTraceValue(value: string | number | boolean | null) {
+  if (value === null) {
+    return "null";
+  }
+
+  return String(value);
+}
+
 function LessonNav({ lesson }: { lesson: LessonDefinition }) {
   return (
     <nav className="lesson-nav" aria-label="Lesson navigation">
@@ -31,6 +39,8 @@ function LessonNav({ lesson }: { lesson: LessonDefinition }) {
       </a>
       <div className="lesson-nav-trail">
         <a href="#/">Home</a>
+        <span aria-hidden="true">&gt;</span>
+        <span>{lesson.stage}</span>
         <span aria-hidden="true">&gt;</span>
         <span>{lesson.module}</span>
         <span aria-hidden="true">&gt;</span>
@@ -65,7 +75,7 @@ function ConceptPanel({ lesson }: { lesson: LessonDefinition }) {
   return (
     <article className="concept-panel">
       <header className="concept-header">
-        <span className="lesson-badge">Lesson {lesson.number} - {lesson.module}</span>
+        <span className="lesson-badge">Stage {lesson.stageNumber} - Lesson {lesson.lessonOrder} - {lesson.module}</span>
         <h1>{lesson.title}</h1>
       </header>
 
@@ -160,7 +170,7 @@ function ConceptPanel({ lesson }: { lesson: LessonDefinition }) {
   );
 }
 
-function CodeSandbox({ starterCode }: { starterCode: string }) {
+function CodeSandbox({ starterCode, traceStep }: { starterCode: string; traceStep: VisualizerStep | undefined }) {
   const [code, setCode] = useState(starterCode);
   const [output, setOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
@@ -189,6 +199,9 @@ function CodeSandbox({ starterCode }: { starterCode: string }) {
     setOutput([]);
   }, [starterCode]);
 
+  const traceCodeLine = traceStep?.codeLine ? code.split("\n")[traceStep.codeLine - 1]?.trim() : undefined;
+  const traceVariables = traceStep?.variables ? Object.entries(traceStep.variables) : [];
+
   return (
     <div className="sandbox-panel" aria-label="Code sandbox">
       <div className="sandbox-toolbar">
@@ -207,14 +220,27 @@ function CodeSandbox({ starterCode }: { starterCode: string }) {
           </button>
         </div>
       </div>
-      <textarea
-        className="sandbox-editor"
-        value={code}
-        onChange={(event) => setCode(event.target.value)}
-        spellCheck={false}
-        aria-label="Edit code here"
-      />
-      <div className="sandbox-output" aria-label="Console output">
+      {traceStep ? (
+        <div className="trace-sync-panel" aria-label="Synchronized trace state">
+          <div className="trace-sync-header">
+            <span>Trace Sync</span>
+            {traceStep.codeLine ? <code>line {traceStep.codeLine}</code> : null}
+          </div>
+          {traceCodeLine ? <pre className="trace-code-line">{traceCodeLine}</pre> : null}
+          <p>{traceStep.description}</p>
+          {traceVariables.length > 0 ? (
+            <dl className="trace-vars">
+              {traceVariables.map(([name, value]) => (
+                <div key={name}>
+                  <dt>{name}</dt>
+                  <dd>{formatTraceValue(value)}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
+        </div>
+      ) : null}
+      <div className="sandbox-output" aria-label="Console output" aria-live="polite">
         <span className="output-label">Console</span>
         {output.length > 0 ? (
           output.map((line, index) => <pre key={`${index}-${line}`}>{line}</pre>)
@@ -222,6 +248,13 @@ function CodeSandbox({ starterCode }: { starterCode: string }) {
           <pre className="output-placeholder">Click "Run" to see output</pre>
         )}
       </div>
+      <textarea
+        className="sandbox-editor"
+        value={code}
+        onChange={(event) => setCode(event.target.value)}
+        spellCheck={false}
+        aria-label="Edit code here"
+      />
     </div>
   );
 }
@@ -232,6 +265,23 @@ export function LessonPage({ lesson }: LessonPageProps) {
     [lesson],
   );
   const Visualizer = lesson.Visualizer;
+  const [traceStepIndex, setTraceStepIndex] = useState(0);
+  const currentTraceStep = steps[traceStepIndex] ?? steps[0];
+
+  useEffect(() => {
+    setTraceStepIndex(0);
+  }, [steps]);
+
+  const scrollToLessonSection = useCallback((sectionId: string) => {
+    const target = document.getElementById(sectionId);
+    if (!target) {
+      return;
+    }
+
+    const stickyOffset = window.matchMedia("(max-width: 980px)").matches ? 76 : 0;
+    const top = Math.max(target.getBoundingClientRect().top + window.scrollY - stickyOffset, 0);
+    window.scrollTo({ top, behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
@@ -240,13 +290,27 @@ export function LessonPage({ lesson }: LessonPageProps) {
   return (
     <div className="lesson-page">
       <LessonNav lesson={lesson} />
+      <nav className="lesson-jump-nav" aria-label="Lesson workspace sections">
+        <button type="button" onClick={() => scrollToLessonSection("lesson-concept")}>Concept</button>
+        <button type="button" onClick={() => scrollToLessonSection("lesson-visualizer")}>Visual</button>
+        <button type="button" onClick={() => scrollToLessonSection("lesson-code")}>Code</button>
+      </nav>
       <div className="lesson-layout">
-        <div className="lesson-left">
+        <div className="lesson-left" id="lesson-concept">
           <ConceptPanel lesson={lesson} />
         </div>
         <div className="lesson-right">
-          <Visualizer values={lesson.exampleValues} steps={steps} />
-          <CodeSandbox starterCode={lesson.starterCode} />
+          <section id="lesson-visualizer" className="lesson-workspace-section">
+            <Visualizer
+              values={lesson.exampleValues}
+              steps={steps}
+              stepIndex={traceStepIndex}
+              onStepIndexChange={setTraceStepIndex}
+            />
+          </section>
+          <section id="lesson-code" className="lesson-workspace-section">
+            <CodeSandbox starterCode={lesson.starterCode} traceStep={currentTraceStep} />
+          </section>
         </div>
       </div>
     </div>

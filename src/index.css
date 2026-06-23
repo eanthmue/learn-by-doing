@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #10201a;
   background: #f6fbf8;
@@ -649,6 +649,154 @@ a {
     align-items: flex-start;
     flex-direction: column;
   }
+}
+
+
+.logo-band a {
+  color: #476057;
+  transition: color 0.15s ease;
+}
+
+.logo-band a:hover {
+  color: #0b9a6e;
+}
+
+.curriculum-section {
+  width: min(1180px, calc(100% - 40px));
+}
+
+.stage-pill-nav {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -8px 0 34px;
+  padding: 12px 0;
+  background: rgba(246, 251, 248, 0.94);
+  border-bottom: 1px solid rgba(204, 227, 215, 0.8);
+  backdrop-filter: blur(12px);
+}
+
+.stage-pill-nav a {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 13px;
+  border: 1px solid #cce3d7;
+  border-radius: 8px;
+  color: #1a3d2e;
+  background: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.stage-pill-nav a:hover {
+  color: #052017;
+  border-color: #21d89f;
+  background: #dffced;
+}
+
+.curriculum-stack,
+.module-stack {
+  display: grid;
+  gap: 28px;
+}
+
+.curriculum-stage {
+  scroll-margin-top: 96px;
+  padding: 32px;
+  border: 1px solid #dcebe3;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 22px 60px rgba(20, 66, 48, 0.07);
+}
+
+.stage-heading,
+.module-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.stage-heading {
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #e4f0ea;
+}
+
+.stage-kicker,
+.module-kicker {
+  display: inline-flex;
+  margin-bottom: 9px;
+  color: #0b9a6e;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stage-heading h2,
+.module-heading h3 {
+  margin: 0;
+  color: #0b1d17;
+  font-weight: 900;
+  line-height: 1.12;
+}
+
+.stage-heading h2 {
+  font-size: 2.1rem;
+}
+
+.module-heading h3 {
+  font-size: 1.35rem;
+}
+
+.stage-heading p,
+.module-heading p {
+  max-width: 760px;
+  margin: 10px 0 0;
+  color: #51675d;
+  line-height: 1.65;
+}
+
+.stage-status,
+.module-status {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  color: #0f3d72;
+  background: #eaf3ff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.module-group {
+  padding: 24px;
+  border: 1px solid #e4f0ea;
+  border-radius: 8px;
+  background: #fbfefc;
+}
+
+.module-heading {
+  margin-bottom: 18px;
+}
+
+.module-group .lessons-grid {
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.module-group .lesson-card {
+  min-height: 260px;
 }
 
 /* ================================================================== */
@@ -1565,3 +1713,445 @@ a {
 }
 
 
+
+/* ================================================================== */
+/*  Lesson UX refinements                                              */
+/* ================================================================== */
+
+html {
+  scroll-padding-top: 90px;
+}
+
+.lesson-jump-nav {
+  display: none;
+}
+
+.lesson-layout {
+  align-items: start;
+  overflow: visible;
+}
+
+.lesson-left {
+  min-width: 0;
+  max-height: none;
+  overflow: visible;
+  scroll-margin-top: 90px;
+}
+
+.lesson-right {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  grid-template-rows: auto minmax(260px, 1fr);
+  gap: 1px;
+  min-width: 0;
+  max-height: calc(100vh - 36px);
+  overflow: hidden;
+}
+
+.lesson-workspace-section {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  scroll-margin-top: 90px;
+}
+
+.lesson-workspace-section > .visualizer-panel,
+.lesson-workspace-section > .sandbox-panel {
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+}
+
+.viz-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.viz-step-count {
+  color: #3d6b5a;
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.viz-cell.source .viz-cell-value {
+  color: #07543d;
+  border-color: #2a5e48;
+  border-style: dashed;
+  background: #edfcf4;
+}
+
+.viz-controls {
+  gap: 8px;
+}
+
+.viz-controls button {
+  width: 42px;
+  height: 42px;
+  font-size: 1rem;
+  font-family: "Segoe UI Symbol", "Arial Unicode MS", system-ui, sans-serif;
+}
+
+.viz-controls .viz-play-button {
+  color: #052017;
+  border-color: transparent;
+  background: linear-gradient(135deg, #21d89f, #13b8b5);
+}
+
+.viz-controls .viz-play-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3ae8b3, #18d4cf);
+}
+
+.viz-progress {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+}
+
+.viz-dot {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+}
+
+.viz-dot::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border: 2px solid #dcebe3;
+  border-radius: 50%;
+  background: #f4faf6;
+  transition: all 0.2s ease;
+}
+
+.viz-dot:hover::before {
+  border-color: #21d89f;
+}
+
+.viz-dot.active::before {
+  border-color: #21d89f;
+  background: #21d89f;
+  box-shadow: 0 0 8px rgba(33, 216, 159, 0.45);
+}
+
+.viz-dot.past::before {
+  border-color: #a8d8c0;
+  background: #a8d8c0;
+}
+
+.sandbox-panel {
+  min-height: 0;
+}
+
+.sandbox-toolbar {
+  flex: 0 0 auto;
+}
+
+.sandbox-output {
+  flex: 0 0 auto;
+  min-height: 96px;
+  max-height: 128px;
+  overflow: auto;
+  border-top: 0;
+  border-bottom: 1px solid #1e3a2f;
+}
+
+.sandbox-output pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.sandbox-editor {
+  flex: 1 1 180px;
+  min-height: 180px;
+  resize: none;
+  overflow: auto;
+}
+
+@media (max-width: 980px) {
+  html {
+    scroll-padding-top: 78px;
+  }
+
+  .lesson-jump-nav {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    gap: 6px;
+    width: min(1400px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 10px 0;
+    background: rgba(246, 251, 248, 0.96);
+    border-bottom: 1px solid #dcebe3;
+    backdrop-filter: blur(12px);
+  }
+
+  .lesson-jump-nav button {
+    flex: 1;
+    min-height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #cce3d7;
+    border-radius: 8px;
+    color: #1a3d2e;
+    background: #ffffff;
+    font-size: 0.86rem;
+    font-weight: 850;
+  }
+
+  .lesson-jump-nav button:hover,
+  .lesson-jump-nav button:focus-visible {
+    color: #052017;
+    border-color: #21d89f;
+    background: #dffced;
+  }
+
+  .lesson-right {
+    position: static;
+    display: flex;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .lesson-workspace-section > .visualizer-panel,
+  .lesson-workspace-section > .sandbox-panel {
+    flex: none;
+  }
+}
+
+@media (max-width: 680px) {
+  html {
+    scroll-padding-top: 74px;
+  }
+
+  .lesson-jump-nav {
+    width: calc(100% - 40px);
+  }
+
+  .lesson-jump-nav button {
+    min-height: 38px;
+    font-size: 0.82rem;
+  }
+
+  .viz-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .visualizer-panel {
+    padding: 20px;
+  }
+
+  .viz-controls button {
+    width: 42px;
+    height: 42px;
+  }
+
+  .viz-dot {
+    width: 34px;
+    height: 34px;
+  }
+
+  .sandbox-output {
+    max-height: 150px;
+  }
+
+  .sandbox-editor {
+    min-height: 260px;
+    resize: vertical;
+  }
+}
+.viz-dot.active,
+.viz-dot.past {
+  background: transparent;
+  box-shadow: none;
+}
+
+.viz-controls button {
+  width: auto;
+  min-width: 54px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.lesson-jump-nav button {
+  cursor: pointer;
+}
+
+.trace-sync-panel {
+  flex: 0 0 auto;
+  padding: 12px 18px 14px;
+  border-bottom: 1px solid #1e3a2f;
+  background: #0b1d17;
+}
+
+.trace-sync-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: #7aad96;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.trace-sync-header code {
+  padding: 3px 7px;
+  border-radius: 5px;
+  color: #052017;
+  background: #21d89f;
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.trace-code-line {
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  border-left: 3px solid #21d89f;
+  border-radius: 6px;
+  color: #caffdf;
+  background: rgba(33, 216, 159, 0.1);
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.trace-sync-panel p {
+  margin: 0;
+  color: #a8d8c0;
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.trace-vars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 0;
+}
+
+.trace-vars div {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border: 1px solid #1e3a2f;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.trace-vars dt,
+.trace-vars dd {
+  margin: 0;
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.74rem;
+}
+
+.trace-vars dt {
+  color: #7aad96;
+}
+
+.trace-vars dd {
+  color: #caffdf;
+  font-weight: 850;
+}
+
+.sandbox-panel {
+  overflow-y: auto;
+}
+
+.sandbox-output {
+  min-height: 74px;
+}
+
+@media (max-width: 680px) {
+  .trace-sync-panel {
+    padding: 12px 14px;
+  }
+
+  .trace-sync-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+@media (max-width: 980px) {
+  .curriculum-section {
+    width: min(100% - 32px, 760px);
+  }
+
+  .curriculum-stage {
+    padding: 24px;
+  }
+
+  .stage-heading,
+  .module-heading {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .stage-status,
+  .module-status {
+    align-self: flex-start;
+  }
+
+  .module-group .lessons-grid {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .curriculum-section {
+    width: calc(100% - 28px);
+  }
+
+  .stage-pill-nav {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    margin-bottom: 24px;
+    padding-bottom: 10px;
+  }
+
+  .stage-pill-nav a {
+    flex: 0 0 auto;
+  }
+
+  .curriculum-stage,
+  .module-group {
+    padding: 18px;
+  }
+
+  .stage-heading h2 {
+    font-size: 1.65rem;
+  }
+
+  .module-heading h3 {
+    font-size: 1.18rem;
+  }
+
+  .module-group .lesson-card {
+    min-height: auto;
+  }
+}

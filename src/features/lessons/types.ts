@@ -1,10 +1,15 @@
-﻿import type { ComponentType, ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 export interface LessonCardEntry {
   slug: string;
   title: string;
+  stage: string;
+  stageNumber: number;
   module: string;
+  moduleSlug: string;
+  moduleOrder: number;
   number: number;
+  lessonOrder: number;
   description: string;
   tags: string[];
   available: boolean;
@@ -14,6 +19,8 @@ export interface VisualizerStep {
   activeIndex: number | null;
   total: number;
   description: string;
+  codeLine?: number;
+  variables?: Record<string, string | number | boolean | null>;
   prefixValues?: Array<number | null>;
   prefixIndex?: number | null;
   queryRange?: {
@@ -28,6 +35,8 @@ export interface VisualizerStep {
 export interface LessonVisualizerProps {
   values: number[];
   steps: VisualizerStep[];
+  stepIndex?: number;
+  onStepIndexChange?: (index: number) => void;
 }
 
 export type TextSegment =
@@ -89,3 +98,4 @@ export interface LessonDefinition extends LessonCardEntry {
 }
 
 export type RichTextRenderer = (content: RichText) => ReactNode;
+

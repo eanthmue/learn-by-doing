@@ -1,4 +1,4 @@
-﻿import { LessonPage } from "../LessonPage";
+import { LessonPage } from "../LessonPage";
 import type { LessonContent, LessonDefinition, VisualizerStep } from "../types";
 import { ArrayTraversalVisualizer } from "../visualizers/ArrayTraversalVisualizer";
 
@@ -187,8 +187,13 @@ function buildArrayTraversalSteps(values: number[]): VisualizerStep[] {
 export const arrayTraversalLesson: LessonDefinition = {
   slug: "array-traversal",
   title: "Array Traversal and Indexing",
-  module: "Arrays & Strings",
-  number: 1,
+  stage: "Linear Data Structures",
+  stageNumber: 2,
+  module: "Arrays and Strings",
+  moduleSlug: "arrays-and-strings",
+  moduleOrder: 1,
+  number: 3,
+  lessonOrder: 1,
   description:
     "Learn to visit every element in an array, track a running result, and apply predicates during traversal.",
   tags: ["O(n)", "for loop", "accumulator"],

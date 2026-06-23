@@ -1,45 +1,60 @@
-﻿import "./index.css";
+import "./index.css";
+import { curriculumStages, type CurriculumModule, type CurriculumStage } from "./features/lessons/curriculum";
 import { getLessonByPath, lessonCards } from "./features/lessons/lessonRegistry";
 import type { LessonCardEntry } from "./features/lessons/types";
 import { useRoute } from "./useRoute";
 
+const lessonCardBySlug = new Map(lessonCards.map((lesson) => [lesson.slug, lesson]));
+const availableLessonCount = lessonCards.filter((lesson) => lesson.available).length;
+const moduleCount = curriculumStages.reduce((total, stage) => total + stage.modules.length, 0);
+
 const outcomes = [
-  { value: "Free", label: "for learners" },
-  { value: "3", label: "learning modes" },
-  { value: "DSA", label: "practice path" },
+  { value: String(curriculumStages.length), label: "DSA stages" },
+  { value: String(moduleCount), label: "topic modules" },
+  { value: String(lessonCards.length), label: "planned lessons" },
 ];
 
 const learningFlow = [
   {
     step: "Read",
     title: "Start with the idea",
-    body: "Each lesson explains the mental model, the useful invariants, and the small details that make an algorithm click.",
+    body: "Each lesson explains the mental model, invariant, and boundary cases before asking learners to edit code.",
   },
   {
     step: "Code",
     title: "Practice beside the explanation",
-    body: "Editable examples let learners change the code, reset it, and try the pattern while the concept is still fresh.",
+    body: "Runnable starter code stays next to the lesson so learners can change inputs while the concept is still fresh.",
   },
   {
     step: "See",
-    title: "Watch the state change",
-    body: "Visualizers make pointers, queues, swaps, and visited sets visible so learners can connect code to behavior.",
+    title: "Watch state change",
+    body: "Deterministic visualizers show indexes, stacks, queues, trees, graphs, and tables from explicit step data.",
   },
 ];
 
-const features = [
-  "Free access for learners",
-  "Local progress that stays on the device",
-  "JS and TS examples with resettable templates",
-  "Responsive study mode for desktop and mobile",
+const practiceStrategy = [
+  "Implement core structures from scratch once before leaning on built-ins.",
+  "Name the pattern behind each problem instead of memorizing individual solutions.",
+  "Trace a small input by hand before optimizing the implementation.",
+  "Use complexity notes to connect each code path to time and space cost.",
 ];
+
+function getCardForLesson(slug: string): LessonCardEntry {
+  const card = lessonCardBySlug.get(slug);
+
+  if (!card) {
+    throw new Error(`Missing lesson card metadata for ${slug}`);
+  }
+
+  return card;
+}
 
 function LessonCard({ lesson }: { lesson: LessonCardEntry }) {
   const inner = (
     <>
       <div className="lcard-header">
         <span className="lcard-module">{lesson.module}</span>
-        <span className="lcard-number">#{lesson.number}</span>
+        <span className="lcard-number">S{lesson.stageNumber}.{lesson.lessonOrder}</span>
       </div>
       <h3 className="lcard-title">{lesson.title}</h3>
       <p className="lcard-description">{lesson.description}</p>
@@ -73,9 +88,51 @@ function LessonCard({ lesson }: { lesson: LessonCardEntry }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Landing page                                                       */
-/* ------------------------------------------------------------------ */
+function CurriculumModuleGroup({ module }: { module: CurriculumModule }) {
+  const lessons = module.lessons.map((lesson) => getCardForLesson(lesson.slug));
+  const availableCount = lessons.filter((lesson) => lesson.available).length;
+
+  return (
+    <section className="module-group" id={`module-${module.slug}`} aria-labelledby={`module-title-${module.slug}`}>
+      <div className="module-heading">
+        <div>
+          <span className="module-kicker">Module {module.order}</span>
+          <h3 id={`module-title-${module.slug}`}>{module.title}</h3>
+          <p>{module.summary}</p>
+        </div>
+        <span className="module-status">{availableCount}/{lessons.length} live</span>
+      </div>
+      <div className="lessons-grid" aria-label={`${module.title} lessons`}>
+        {lessons.map((lesson) => (
+          <LessonCard key={lesson.slug} lesson={lesson} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CurriculumStageSection({ stage }: { stage: CurriculumStage }) {
+  const stageLessons = stage.modules.flatMap((module) => module.lessons.map((lesson) => getCardForLesson(lesson.slug)));
+  const availableCount = stageLessons.filter((lesson) => lesson.available).length;
+
+  return (
+    <article className="curriculum-stage" id={`stage-${stage.slug}`} aria-labelledby={`stage-title-${stage.slug}`}>
+      <header className="stage-heading">
+        <div>
+          <span className="stage-kicker">Stage {stage.number}</span>
+          <h2 id={`stage-title-${stage.slug}`}>{stage.title}</h2>
+          <p>{stage.summary}</p>
+        </div>
+        <span className="stage-status">{availableCount}/{stageLessons.length} lessons live</span>
+      </header>
+      <div className="module-stack">
+        {stage.modules.map((module) => (
+          <CurriculumModuleGroup key={module.slug} module={module} />
+        ))}
+      </div>
+    </article>
+  );
+}
 
 function LandingPage() {
   return (
@@ -87,25 +144,25 @@ function LandingPage() {
             <span>LearnByDoing</span>
           </a>
           <div className="nav-links" aria-label="Page sections">
-            <a href="#flow">Flow</a>
-            <a href="#modules">Modules</a>
-            <a href="#free">Free</a>
+            <a href="#flow">Loop</a>
+            <a href="#path">Path</a>
+            <a href="#practice">Practice</a>
           </div>
-          <a className="nav-action" href="#modules">Browse lessons</a>
+          <a className="nav-action" href="#path">Browse path</a>
         </nav>
 
         <div className="hero-grid" id="top">
           <div className="hero-copy">
             <p className="eyebrow">Free interactive DSA learning</p>
-            <h1 id="hero-title">Learn algorithms by reading, coding, and seeing them run.</h1>
+            <h1 id="hero-title">A structured DSA path for reading, coding, and seeing algorithms run.</h1>
             <p className="hero-lede">
-              A focused learning workspace for students and self-taught engineers who want to understand data structures and algorithms by doing.
+              LearnByDoing now follows the full DSA roadmap: foundations, linear structures, sorting and hashing, trees and graphs, then advanced patterns.
             </p>
             <div className="hero-actions" aria-label="Primary page links">
-              <a className="button primary" href="#modules">Start learning</a>
-              <a className="button secondary" href="#flow">See how it works</a>
+              <a className="button primary" href="#path">Start the path</a>
+              <a className="button secondary" href="#flow">See the lesson loop</a>
             </div>
-            <dl className="outcome-strip" aria-label="Platform highlights">
+            <dl className="outcome-strip" aria-label="Curriculum highlights">
               {outcomes.map((outcome) => (
                 <div key={outcome.label}>
                   <dt>{outcome.value}</dt>
@@ -120,31 +177,30 @@ function LandingPage() {
               <span />
               <span />
               <span />
-              <strong>Two Pointer Search</strong>
+              <strong>Stage 2: Arrays and Strings</strong>
             </div>
             <div className="preview-layout">
               <section className="lesson-notes" aria-label="Lesson notes preview">
                 <p className="section-label">Concept</p>
-                <h2>Remove impossible pairs with each comparison.</h2>
-                <p>Move the left pointer when the sum is too small. Move the right pointer when it is too large.</p>
+                <h2>Keep the lesson contract simple.</h2>
+                <p>Text content, starter code, and visualizer steps stay separate so each concept can grow without tangling the engine.</p>
                 <ul>
-                  <li>Sorted input</li>
-                  <li>Linear traversal</li>
-                  <li>Pointer invariants</li>
+                  <li>Read the invariant</li>
+                  <li>Edit runnable code</li>
+                  <li>Trace explicit state</li>
                 </ul>
               </section>
               <section className="code-window" aria-label="Code preview">
-                <span>function hasPair(values, target) {`{`}</span>
-                <span>  let left = 0;</span>
-                <span>  let right = values.length - 1;</span>
-                <span className="active-line">  while (left &lt; right) {`{`}</span>
-                <span>    const sum = values[left] + values[right];</span>
-                <span>  {`}`}</span>
+                <span>function rangeSum(prefix, left, right) {`{`}</span>
+                <span className="active-line">  return prefix[right + 1] - prefix[left];</span>
                 <span>{`}`}</span>
+                <span />
+                <span>const nums = [3, -2, 5, 1, 6];</span>
+                <span>const prefix = buildPrefixSums(nums);</span>
               </section>
               <section className="visualizer" aria-label="Visualizer preview">
-                {[1, 3, 4, 7, 9, 12].map((value, index) => (
-                  <div className={index === 1 || index === 4 ? "node active" : "node"} key={value}>
+                {[0, 3, 1, 6, 7, 13].map((value, index) => (
+                  <div className={index === 2 || index === 5 ? "node active" : "node"} key={`${value}-${index}`}>
                     {value}
                   </div>
                 ))}
@@ -154,18 +210,17 @@ function LandingPage() {
         </div>
       </section>
 
-      <section className="logo-band" aria-label="Audience groups">
-        <span>CS students</span>
-        <span>Self-taught engineers</span>
-        <span>Interview practice</span>
-        <span>Classroom-friendly</span>
+      <section className="logo-band" aria-label="Curriculum stages">
+        {curriculumStages.map((stage) => (
+          <a key={stage.slug} href={`#stage-${stage.slug}`}>Stage {stage.number}: {stage.title}</a>
+        ))}
       </section>
 
       <section className="section-shell" id="flow" aria-labelledby="flow-title">
         <div className="section-heading">
           <p className="eyebrow">The lesson loop</p>
-          <h2 id="flow-title">One place to read, practice, and visualize.</h2>
-          <p>No switching between notes, editors, and animation tools. LearnByDoing keeps the explanation, sandbox, and visualizer together.</p>
+          <h2 id="flow-title">Each topic keeps reading, code, and visualization together.</h2>
+          <p>The roadmap can be broad, but every individual lesson stays focused on one concept, one runnable starter, and one deterministic visual trace.</p>
         </div>
         <div className="flow-grid">
           {learningFlow.map((item) => (
@@ -178,27 +233,32 @@ function LandingPage() {
         </div>
       </section>
 
-      <section className="section-shell" id="modules" aria-labelledby="modules-title">
+      <section className="section-shell curriculum-section" id="path" aria-labelledby="path-title">
         <div className="section-heading">
-          <p className="eyebrow">Current curriculum</p>
-          <h2 id="modules-title">DSA foundations, one concept at a time.</h2>
-          <p>Start with common algorithm patterns and build understanding through short lessons, editable code, and visual feedback.</p>
+          <p className="eyebrow">DSA roadmap</p>
+          <h2 id="path-title">Lessons follow the outline from foundations to advanced patterns.</h2>
+          <p>{availableLessonCount} lessons are live now. The remaining cards show the planned sequence so the site navigation matches the curriculum path.</p>
         </div>
-        <div className="lessons-grid" aria-label="Available lessons">
-          {lessonCards.map((lesson) => (
-            <LessonCard key={lesson.slug} lesson={lesson} />
+        <nav className="stage-pill-nav" aria-label="Curriculum stage shortcuts">
+          {curriculumStages.map((stage) => (
+            <a key={stage.slug} href={`#stage-${stage.slug}`}>Stage {stage.number}</a>
+          ))}
+        </nav>
+        <div className="curriculum-stack">
+          {curriculumStages.map((stage) => (
+            <CurriculumStageSection key={stage.slug} stage={stage} />
           ))}
         </div>
       </section>
 
-      <section className="section-shell split-section" aria-labelledby="platform-title">
+      <section className="section-shell split-section" id="practice" aria-labelledby="practice-title">
         <div className="section-heading align-left">
-          <p className="eyebrow">Learning space</p>
-          <h2 id="platform-title">Built for steady practice.</h2>
-          <p>Fast, calm, and focused enough for daily study, with lessons that stay close to the code and the visual state learners need to reason about.</p>
+          <p className="eyebrow">Practice strategy</p>
+          <h2 id="practice-title">Study patterns without turning the roadmap into memorization.</h2>
+          <p>The outline is long on purpose, but the MVP keeps the learning loop steady: implement, trace, name the pattern, and explain the complexity.</p>
         </div>
         <div className="feature-list">
-          {features.map((feature) => (
+          {practiceStrategy.map((feature) => (
             <div className="feature-row" key={feature}>
               <span aria-hidden="true">+</span>
               <p>{feature}</p>
@@ -207,21 +267,17 @@ function LandingPage() {
         </div>
       </section>
 
-      <section className="cta-section" id="free" aria-labelledby="free-title">
+      <section className="cta-section" aria-labelledby="free-title">
         <div>
           <p className="eyebrow">Always free</p>
-          <h2 id="free-title">Open learning for anyone practicing DSA.</h2>
-          <p>No payment or account required. Pick a topic, study the idea, edit the code, and watch the algorithm move.</p>
+          <h2 id="free-title">Pick the first live lesson and keep moving through the path.</h2>
+          <p>No payment or account required. Start with arrays today, then the navigation already shows where the curriculum grows next.</p>
         </div>
-        <a className="button primary" href="#modules">Choose a module</a>
+        <a className="button primary" href="#lesson-array-traversal">Start arrays</a>
       </section>
     </main>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/*  Router wrapper                                                     */
-/* ------------------------------------------------------------------ */
 
 export function App() {
   const route = useRoute();
@@ -236,4 +292,3 @@ export function App() {
 }
 
 export default App;
-
