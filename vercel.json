@@ -1,4 +1,3 @@
 {
-  "bunVersion": "1.3.x",
-  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- . :!docs"
+    "bunVersion": "1.3.x"
 }
