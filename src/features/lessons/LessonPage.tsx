@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { runUserCode } from "../sandbox/runUserCode";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { runUserCode } from "../sandbox";
 import type { LessonDefinition, LessonPageProps, RichText, TextSegment, VisualizerStep } from "./types";
+
+type LessonTab = "explanation" | "practice";
 
 function renderSegment(segment: TextSegment, index: number): ReactNode {
   if (typeof segment === "string") {
-    return segment;
+    return <Fragment key={index}>{segment}</Fragment>;
   }
 
   if ("code" in segment) {
@@ -174,6 +176,14 @@ function CodeSandbox({ starterCode, traceStep }: { starterCode: string; traceSte
   const [code, setCode] = useState(starterCode);
   const [output, setOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
+  const editorScrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = useCallback((event: React.UIEvent<HTMLTextAreaElement>) => {
+    if (editorScrollRef.current) {
+      editorScrollRef.current.scrollTop = event.currentTarget.scrollTop;
+      editorScrollRef.current.scrollLeft = event.currentTarget.scrollLeft;
+    }
+  }, []);
 
   useEffect(() => {
     setCode(starterCode);
@@ -199,7 +209,6 @@ function CodeSandbox({ starterCode, traceStep }: { starterCode: string; traceSte
     setOutput([]);
   }, [starterCode]);
 
-  const traceCodeLine = traceStep?.codeLine ? code.split("\n")[traceStep.codeLine - 1]?.trim() : undefined;
   const traceVariables = traceStep?.variables ? Object.entries(traceStep.variables) : [];
 
   return (
@@ -226,7 +235,6 @@ function CodeSandbox({ starterCode, traceStep }: { starterCode: string; traceSte
             <span>Trace Sync</span>
             {traceStep.codeLine ? <code>line {traceStep.codeLine}</code> : null}
           </div>
-          {traceCodeLine ? <pre className="trace-code-line">{traceCodeLine}</pre> : null}
           <p>{traceStep.description}</p>
           {traceVariables.length > 0 ? (
             <dl className="trace-vars">
@@ -248,15 +256,33 @@ function CodeSandbox({ starterCode, traceStep }: { starterCode: string; traceSte
           <pre className="output-placeholder">Click “Run” to see output</pre>
         )}
       </div>
-      <textarea
-        className="sandbox-editor"
-        name="lesson-code"
-        autoComplete="off"
-        value={code}
-        onChange={(event) => setCode(event.target.value)}
-        spellCheck={false}
-        aria-label="Edit code here"
-      />
+      <div className="code-editor-container">
+        <div className="code-highlight-overlay" aria-hidden="true" ref={editorScrollRef}>
+          {code.split("\n").map((line, i) => {
+            const isActive = traceStep?.codeLine === i + 1;
+            return (
+              <div className={`code-line ${isActive ? "code-line-active" : ""}`} key={i}>
+                <span className="line-gutter">
+                  {isActive && <span className="debug-arrow">▶</span>}
+                  <span className="line-number">{i + 1}</span>
+                </span>
+                <span className="line-content">{line || " "}</span>
+              </div>
+            );
+          })}
+        </div>
+        <textarea
+          className="sandbox-editor code-editor-input"
+          name="lesson-code"
+          autoComplete="off"
+          value={code}
+          onChange={(event) => setCode(event.target.value)}
+          onScroll={handleScroll}
+          spellCheck={false}
+          aria-label="Edit code here"
+          wrap="off"
+        />
+      </div>
     </div>
   );
 }
@@ -267,23 +293,13 @@ export function LessonPage({ lesson }: LessonPageProps) {
     [lesson],
   );
   const Visualizer = lesson.Visualizer;
+  const [activeTab, setActiveTab] = useState<LessonTab>("explanation");
   const [traceStepIndex, setTraceStepIndex] = useState(0);
   const currentTraceStep = steps[traceStepIndex] ?? steps[0];
 
   useEffect(() => {
     setTraceStepIndex(0);
   }, [steps]);
-
-  const scrollToLessonSection = useCallback((sectionId: string) => {
-    const target = document.getElementById(sectionId);
-    if (!target) {
-      return;
-    }
-
-    const stickyOffset = window.matchMedia("(max-width: 980px)").matches ? 76 : 0;
-    const top = Math.max(target.getBoundingClientRect().top + window.scrollY - stickyOffset, 0);
-    window.scrollTo({ top, behavior: "smooth" });
-  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
@@ -293,28 +309,61 @@ export function LessonPage({ lesson }: LessonPageProps) {
     <div className="lesson-page">
       <a className="skip-link" href="#lesson-main">Skip to Lesson Content</a>
       <LessonNav lesson={lesson} />
-      <nav className="lesson-jump-nav" aria-label="Lesson workspace sections">
-        <button type="button" onClick={() => scrollToLessonSection("lesson-concept")}>Concept</button>
-        <button type="button" onClick={() => scrollToLessonSection("lesson-visualizer")}>Visual</button>
-        <button type="button" onClick={() => scrollToLessonSection("lesson-code")}>Code</button>
+      <nav className="lesson-tab-nav" aria-label="Lesson views" role="tablist">
+        <button
+          type="button"
+          id="lesson-tab-explanation"
+          role="tab"
+          aria-selected={activeTab === "explanation"}
+          aria-controls="lesson-explanation-panel"
+          className={activeTab === "explanation" ? "active" : ""}
+          onClick={() => setActiveTab("explanation")}
+        >
+          Explanation
+        </button>
+        <button
+          type="button"
+          id="lesson-tab-practice"
+          role="tab"
+          aria-selected={activeTab === "practice"}
+          aria-controls="lesson-practice-panel"
+          className={activeTab === "practice" ? "active" : ""}
+          onClick={() => setActiveTab("practice")}
+        >
+          Code + Visualizer
+        </button>
       </nav>
       <main className="lesson-layout" id="lesson-main">
-        <div className="lesson-left" id="lesson-concept">
+        <section
+          className={`lesson-tab-panel lesson-concept-top ${activeTab === "explanation" ? "active" : ""}`}
+          id="lesson-explanation-panel"
+          role="tabpanel"
+          aria-labelledby="lesson-tab-explanation"
+          hidden={activeTab !== "explanation"}
+        >
           <ConceptPanel lesson={lesson} />
-        </div>
-        <div className="lesson-right">
-          <section id="lesson-visualizer" className="lesson-workspace-section">
-            <Visualizer
-              values={lesson.exampleValues}
-              steps={steps}
-              stepIndex={traceStepIndex}
-              onStepIndexChange={setTraceStepIndex}
-            />
-          </section>
-          <section id="lesson-code" className="lesson-workspace-section">
-            <CodeSandbox starterCode={lesson.starterCode} traceStep={currentTraceStep} />
-          </section>
-        </div>
+        </section>
+        <section
+          className={`lesson-tab-panel lesson-practice-panel ${activeTab === "practice" ? "active" : ""}`}
+          id="lesson-practice-panel"
+          role="tabpanel"
+          aria-labelledby="lesson-tab-practice"
+          hidden={activeTab !== "practice"}
+        >
+          <div className="lesson-workspace-split">
+            <section id="lesson-code" className="lesson-workspace-section">
+              <CodeSandbox starterCode={lesson.starterCode} traceStep={currentTraceStep} />
+            </section>
+            <section id="lesson-visualizer" className="lesson-workspace-section">
+              <Visualizer
+                values={lesson.exampleValues}
+                steps={steps}
+                stepIndex={traceStepIndex}
+                onStepIndexChange={setTraceStepIndex}
+              />
+            </section>
+          </div>
+        </section>
       </main>
     </div>
   );

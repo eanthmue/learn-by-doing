@@ -1,22 +1,25 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { LessonVisualizerProps } from "../types";
 
 export function PrefixSumsVisualizer({ values, steps, stepIndex, onStepIndexChange }: LessonVisualizerProps) {
-  const [internalStepIndex, setInternalStepIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const activeStepIndex = Math.max(0, Math.min(stepIndex ?? internalStepIndex, steps.length - 1));
+  const activeStepIndex = Math.max(0, Math.min(stepIndex ?? 0, steps.length - 1));
   const current = steps[activeStepIndex] ?? steps[0];
 
-  const setSyncedStepIndex = useCallback((nextIndex: number) => {
-    const clampedIndex = Math.max(0, Math.min(nextIndex, steps.length - 1));
-    setInternalStepIndex(clampedIndex);
-    onStepIndexChange?.(clampedIndex);
-  }, [onStepIndexChange, steps.length]);
+  const stepIndexRef = useRef(activeStepIndex);
+  const onStepIndexChangeRef = useRef(onStepIndexChange);
+
+  useEffect(() => {
+    stepIndexRef.current = activeStepIndex;
+  }, [activeStepIndex]);
+
+  useEffect(() => {
+    onStepIndexChangeRef.current = onStepIndexChange;
+  }, [onStepIndexChange]);
 
   useEffect(() => {
     setPlaying(false);
-    setSyncedStepIndex(0);
-  }, [setSyncedStepIndex]);
+  }, [steps]);
 
   useEffect(() => {
     if (!playing) {
@@ -24,21 +27,23 @@ export function PrefixSumsVisualizer({ values, steps, stepIndex, onStepIndexChan
     }
 
     const timer = window.setInterval(() => {
-      const nextIndex = activeStepIndex + 1;
+      const currentIdx = stepIndexRef.current;
+      const nextIndex = currentIdx + 1;
       if (nextIndex >= steps.length) {
         setPlaying(false);
         return;
       }
 
-      setSyncedStepIndex(nextIndex);
+      onStepIndexChangeRef.current?.(nextIndex);
     }, 900);
 
     return () => window.clearInterval(timer);
-  }, [activeStepIndex, playing, setSyncedStepIndex, steps.length]);
+  }, [playing, steps.length]);
 
   const goTo = (index: number) => {
     setPlaying(false);
-    setSyncedStepIndex(index);
+    const clampedIndex = Math.max(0, Math.min(index, steps.length - 1));
+    onStepIndexChange?.(clampedIndex);
   };
 
   if (!current) {
@@ -153,7 +158,7 @@ export function PrefixSumsVisualizer({ values, steps, stepIndex, onStepIndexChan
           className="viz-play-button"
           onClick={() => {
             if (activeStepIndex >= steps.length - 1) {
-              setSyncedStepIndex(0);
+              onStepIndexChange?.(0);
             }
             setPlaying((wasPlaying) => !wasPlaying);
           }}

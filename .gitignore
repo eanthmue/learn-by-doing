@@ -6,6 +6,7 @@ out
 dist
 *.tgz
 output
+.playwright-mcp
 
 # code coverage
 coverage

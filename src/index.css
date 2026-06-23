@@ -1,7 +1,25 @@
 :root {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #10201a;
-  background: #f6fbf8;
+  
+  /* Color Design Tokens */
+  --color-primary: #10201a;
+  --color-secondary: #51675d;
+  --color-accent: #21d89f;
+  --color-accent-dark: #13b8b5;
+  --color-accent-light: #a8ffcf;
+  --color-accent-bg: #dffced;
+  --color-background: #f6fbf8;
+  --color-border: #dcebe3;
+  --color-border-light: #c9ddd2;
+  --color-white: #ffffff;
+  --color-dark-green: #0b1d17;
+  
+  /* Transitions */
+  --transition-fast: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  --transition-normal: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+  color: var(--color-primary);
+  background: var(--color-background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -21,7 +39,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #f6fbf8;
+  background: var(--color-background);
   overflow-x: hidden;
   touch-action: manipulation;
 }
@@ -394,13 +412,14 @@ button {
 .node {
   width: 54px;
   height: 54px;
-  border: 1px solid #c9ddd2;
+  border: 1px solid var(--color-border-light);
   border-radius: 8px;
   display: grid;
   place-items: center;
   color: #294139;
   background: #f4faf6;
   font-weight: 850;
+  transition: var(--transition-fast);
 }
 
 .node.active {
@@ -1028,33 +1047,111 @@ button {
   white-space: nowrap;
 }
 
-/* Split layout */
-.lesson-layout {
+.lesson-tab-nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(420px, 1fr);
-  gap: 1px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
   width: min(1400px, calc(100% - 40px));
-  margin: 24px auto 0;
-  border: 1px solid #dcebe3;
+  margin: 0 auto;
+  padding: 12px 0;
+  background: rgba(246, 251, 248, 0.96);
+  border-bottom: 1px solid #dcebe3;
+  backdrop-filter: blur(12px);
+}
+
+.lesson-tab-nav button {
+  min-width: 0;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #cce3d7;
+  border-radius: 8px;
+  color: #1a3d2e;
+  background: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 850;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.lesson-tab-nav button:hover,
+.lesson-tab-nav button:focus-visible {
+  color: #052017;
+  border-color: #21d89f;
+  background: #dffced;
+}
+
+.lesson-tab-nav button.active {
+  color: #052017;
+  border-color: #21d89f;
+  background: linear-gradient(135deg, #dffced, #ffffff);
+  box-shadow: inset 0 -3px 0 #21d89f;
+}
+
+/* Tabbed layout */
+.lesson-layout {
+  width: min(1400px, calc(100% - 40px));
+  margin: 12px auto 0;
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   overflow: hidden;
-  background: #dcebe3;
+  background: var(--color-white);
   box-shadow: 0 24px 72px rgba(20, 66, 48, 0.08);
 }
 
-.lesson-left {
-  background: #ffffff;
-  overflow-y: auto;
-  max-height: calc(100vh - 100px);
+.lesson-tab-panel {
+  min-width: 0;
+  background: var(--color-white);
 }
 
-.lesson-right {
-  display: flex;
-  flex-direction: column;
+.lesson-tab-panel[hidden] {
+  display: none;
+}
+
+.lesson-concept-top {
+  background: var(--color-white);
+}
+
+.lesson-concept-top .concept-panel {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.lesson-workspace-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1px;
-  background: #dcebe3;
-  overflow-y: auto;
-  max-height: calc(100vh - 100px);
+  background: var(--color-border);
+}
+
+@media (min-width: 981px) {
+  .lesson-layout {
+    height: calc(100vh - 132px);
+    overflow: hidden;
+  }
+
+  .lesson-tab-panel.active {
+    height: 100%;
+    overflow: auto;
+  }
+
+  .lesson-practice-panel.active {
+    overflow: hidden;
+  }
+
+  .lesson-workspace-split {
+    height: 100%;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  .lesson-workspace-section {
+    height: 100%;
+    overflow: hidden;
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -1451,18 +1548,97 @@ button {
   cursor: not-allowed;
 }
 
-.sandbox-editor {
+.code-editor-container {
+  position: relative;
   width: 100%;
   min-height: 340px;
-  padding: 18px;
+  display: flex;
+  background: transparent;
+}
+
+.code-highlight-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18px 0;
+  pointer-events: none;
+  font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  font-size: 0.86rem;
+  line-height: 1.65;
+  tab-size: 2;
+  overflow: hidden;
+  white-space: pre;
+}
+
+.sandbox-editor.code-editor-input {
+  flex: 1;
+  margin: 0;
+  padding: 18px 18px 18px 56px;
   border: none;
-  color: #c5e8d4;
+  color: transparent;
+  caret-color: #c5e8d4;
   background: transparent;
   font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
   font-size: 0.86rem;
   line-height: 1.65;
-  resize: vertical;
   tab-size: 2;
+  z-index: 1;
+  resize: vertical;
+  overflow: auto;
+  white-space: pre;
+  word-wrap: normal;
+}
+
+.sandbox-editor.code-editor-input::selection {
+  background: rgba(197, 232, 212, 0.2);
+  color: transparent;
+}
+
+.code-line {
+  display: flex;
+  padding: 0 18px 0 0;
+  transition: background 0.15s;
+}
+
+.code-line-active {
+  background: rgba(229, 192, 57, 0.14);
+}
+
+.line-gutter {
+  width: 56px;
+  flex-shrink: 0;
+  padding-right: 14px;
+  text-align: right;
+  color: #3a5c4e;
+  user-select: none;
+  position: relative;
+}
+
+.code-line-active .line-gutter {
+  color: #e5c039;
+}
+
+.code-line-active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 3px;
+  height: 1.65em;
+  background: #e5c039;
+}
+
+.debug-arrow {
+  position: absolute;
+  left: 10px;
+  color: #e5c039;
+  font-size: 0.75rem;
+  line-height: 1.65em;
+}
+
+.line-content {
+  color: #c5e8d4;
 }
 
 .sandbox-output {
@@ -1543,7 +1719,7 @@ button {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  transition: transform 0.3s ease;
+  transition: var(--transition-fast);
 }
 
 .viz-cell-index {
@@ -1558,18 +1734,14 @@ button {
   height: 58px;
   display: grid;
   place-items: center;
-  border: 2px solid #dcebe3;
+  border: 2px solid var(--color-border);
   border-radius: 10px;
   color: #294139;
   background: #f4faf6;
   font-size: 1.15rem;
   font-weight: 850;
   font-family: "Cascadia Code", monospace;
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    color 0.3s ease;
+  transition: var(--transition-fast), box-shadow 0.2s ease, color 0.2s ease;
 }
 
 .viz-cell.active {
@@ -1754,12 +1926,18 @@ button {
 
 @media (max-width: 980px) {
   .lesson-layout {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
   }
 
-  .lesson-left,
-  .lesson-right {
-    max-height: none;
+  .lesson-concept-top {
+    overflow-y: visible;
+    height: auto;
+  }
+
+  .lesson-workspace-split {
+    grid-template-columns: 1fr;
   }
 
   .lesson-nav-trail {
@@ -1804,8 +1982,11 @@ button {
     border-radius: 8px;
   }
 
-  .sandbox-editor {
+  .code-editor-container {
     min-height: 260px;
+  }
+  .code-highlight-overlay,
+  .sandbox-editor.code-editor-input {
     font-size: 0.78rem;
   }
 }
@@ -1825,26 +2006,12 @@ html {
 }
 
 .lesson-layout {
-  align-items: start;
-  overflow: visible;
-}
-
-.lesson-left {
-  min-width: 0;
-  max-height: none;
-  overflow: visible;
-  scroll-margin-top: 90px;
-}
-
-.lesson-right {
-  position: sticky;
-  top: 18px;
-  display: grid;
-  grid-template-rows: auto minmax(260px, 1fr);
-  gap: 1px;
-  min-width: 0;
-  max-height: calc(100vh - 36px);
   overflow: hidden;
+}
+
+.lesson-concept-top {
+  min-width: 0;
+  scroll-margin-top: 90px;
 }
 
 .lesson-workspace-section {
@@ -1918,13 +2085,14 @@ html {
   border: 0;
   border-radius: 8px;
   background: transparent;
+  transition: var(--transition-fast);
 }
 
 .viz-dot::before {
   content: "";
   width: 10px;
   height: 10px;
-  border: 2px solid #dcebe3;
+  border: 2px solid var(--color-border);
   border-radius: 50%;
   background: #f4faf6;
   transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
@@ -1967,16 +2135,28 @@ html {
   overflow-wrap: anywhere;
 }
 
-.sandbox-editor {
+.code-editor-container {
   flex: 1 1 180px;
   min-height: 180px;
-  resize: none;
-  overflow: auto;
 }
 
 @media (max-width: 980px) {
   html {
     scroll-padding-top: 78px;
+  }
+
+  .lesson-layout {
+    height: auto;
+    overflow: visible;
+  }
+
+  .lesson-tab-panel.active {
+    height: auto;
+    overflow: visible;
+  }
+
+  .lesson-workspace-split {
+    grid-template-columns: 1fr;
   }
 
   .lesson-jump-nav {
@@ -2013,13 +2193,10 @@ html {
     background: #dffced;
   }
 
-  .lesson-right {
-    position: static;
-    display: flex;
-    max-height: none;
-    overflow: visible;
+  .lesson-workspace-section {
+    scroll-margin-top: 120px;
   }
-
+  
   .lesson-workspace-section > .visualizer-panel,
   .lesson-workspace-section > .sandbox-panel {
     flex: none;
@@ -2033,6 +2210,7 @@ html {
 
   .lesson-nav,
   .lesson-layout,
+  .lesson-tab-nav,
   .lesson-jump-nav {
     width: min(330px, calc(100vw - 64px));
     max-width: min(330px, calc(100vw - 64px));
@@ -2045,6 +2223,11 @@ html {
   .lesson-jump-nav button {
     min-height: 38px;
     font-size: 0.82rem;
+  }
+
+  .lesson-tab-nav button {
+    min-height: 40px;
+    font-size: 0.78rem;
   }
 
   .viz-header {
@@ -2076,9 +2259,8 @@ html {
     max-height: 150px;
   }
 
-  .sandbox-editor {
+  .code-editor-container {
     min-height: 260px;
-    resize: vertical;
   }
 }
 .viz-dot.active,
@@ -2221,6 +2403,7 @@ html {
   .code-window,
   .visualizer,
   .lesson-layout,
+  .lesson-tab-nav,
   .lesson-left,
   .lesson-right,
   .lesson-workspace-section,
@@ -2260,6 +2443,7 @@ html {
 
   .lesson-nav,
   .lesson-layout,
+  .lesson-tab-nav,
   .lesson-jump-nav {
     width: min(330px, calc(100vw - 64px));
     max-width: min(330px, calc(100vw - 64px));

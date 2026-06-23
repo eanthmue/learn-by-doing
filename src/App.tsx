@@ -1,7 +1,12 @@
 import "./index.css";
-import { curriculumStages, type CurriculumModule, type CurriculumStage } from "./features/lessons/curriculum";
-import { getLessonByPath, lessonCards } from "./features/lessons/lessonRegistry";
-import type { LessonCardEntry } from "./features/lessons/types";
+import {
+  curriculumStages,
+  getLessonByPath,
+  lessonCards,
+  type CurriculumModule,
+  type CurriculumStage,
+  type LessonCardEntry,
+} from "./features/lessons";
 import { useRoute } from "./useRoute";
 
 const lessonCardBySlug = new Map(lessonCards.map((lesson) => [lesson.slug, lesson]));
