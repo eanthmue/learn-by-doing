@@ -1343,6 +1343,71 @@ a {
   border-color: #c0ddd0;
 }
 
+.viz-cell.query .viz-cell-value {
+  color: #5f3b00;
+  border-color: #f4b740;
+  background: #fff5d8;
+}
+
+.prefix-viz-panel {
+  align-items: stretch;
+}
+
+.prefix-viz-section {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.prefix-viz-label {
+  color: #7aad96;
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.prefix-viz-row {
+  justify-content: flex-start;
+  overflow-x: auto;
+  margin-bottom: 0;
+  padding-bottom: 4px;
+}
+
+.prefix-viz-row .viz-cell {
+  flex: 0 0 auto;
+}
+
+.prefix-formula {
+  align-self: center;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 4px 0 14px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #7aad96;
+  background: #10201a;
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.prefix-formula code {
+  color: #caffdf;
+  background: transparent;
+  font-family: inherit;
+}
+
+.prefix-formula strong {
+  color: #21d89f;
+  font-size: 1rem;
+}
+
 .viz-result-bar {
   display: flex;
   align-items: center;
@@ -1482,6 +1547,15 @@ a {
 
   .viz-array-row {
     gap: 6px;
+  }
+
+  .prefix-viz-section {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .prefix-formula {
+    border-radius: 8px;
   }
 
   .sandbox-editor {

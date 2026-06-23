@@ -14,6 +14,15 @@ export interface VisualizerStep {
   activeIndex: number | null;
   total: number;
   description: string;
+  prefixValues?: Array<number | null>;
+  prefixIndex?: number | null;
+  queryRange?: {
+    left: number;
+    right: number;
+    startPrefixIndex: number;
+    endPrefixIndex: number;
+    result?: number;
+  };
 }
 
 export interface LessonVisualizerProps {
