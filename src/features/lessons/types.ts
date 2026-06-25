@@ -51,6 +51,7 @@ export interface LessonConceptSection {
   title?: string;
   paragraphs: RichText[];
   showArrayDiagram?: boolean;
+  showGraphDiagram?: boolean;
   pattern?: string;
 }
 

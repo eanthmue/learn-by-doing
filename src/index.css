@@ -1950,8 +1950,183 @@ button {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Graph Visualizer                                                   */
+/* ------------------------------------------------------------------ */
+
+.graph-viz-panel {
+  align-items: stretch;
+}
+
+.graph-viz-diagram {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.graph-viz-svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.graph-viz-edge {
+  stroke: #dcebe3;
+  stroke-width: 2;
+  transition: stroke 0.25s ease, stroke-width 0.25s ease;
+}
+
+.graph-viz-edge.processed {
+  stroke: #a8d8c0;
+  stroke-width: 2;
+}
+
+.graph-viz-edge.current {
+  stroke: #21d89f;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 4px rgba(33, 216, 159, 0.5));
+}
+
+.graph-viz-node {
+  fill: #f4faf6;
+  stroke: #dcebe3;
+  stroke-width: 2;
+  transition: fill 0.25s ease, stroke 0.25s ease, filter 0.25s ease;
+}
+
+.graph-viz-node.touched {
+  fill: #edf5f0;
+  stroke: #a8d8c0;
+}
+
+.graph-viz-node.active {
+  fill: linear-gradient(135deg, #caffdf, #a8ffcf);
+  fill: #caffdf;
+  stroke: #21d89f;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 4px 12px rgba(33, 216, 159, 0.3));
+}
+
+.graph-viz-node-label {
+  fill: #294139;
+  font-size: 13px;
+  font-weight: 850;
+  font-family: "Cascadia Code", monospace;
+  pointer-events: none;
+}
+
+.graph-viz-repr {
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #f4faf6;
+  border: 1px solid #dcebe3;
+}
+
+.graph-viz-repr-title {
+  display: block;
+  color: #346c56;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.graph-viz-adj-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.graph-viz-adj-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.graph-viz-adj-row.highlight {
+  background: rgba(33, 216, 159, 0.12);
+}
+
+.graph-viz-adj-node {
+  color: #294139;
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.85rem;
+  font-weight: 850;
+  min-width: 16px;
+  text-align: center;
+}
+
+.graph-viz-adj-arrow {
+  color: #7aad96;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.graph-viz-adj-neighbors {
+  color: #45685a;
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.graph-viz-matrix {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.graph-viz-matrix-row {
+  display: flex;
+  gap: 2px;
+}
+
+.graph-viz-matrix-cell {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #6b9484;
+  background: #ffffff;
+  border: 1px solid #dcebe3;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.graph-viz-matrix-cell.corner {
+  background: transparent;
+  border-color: transparent;
+}
+
+.graph-viz-matrix-cell.header-cell {
+  color: #346c56;
+  background: #edf5f0;
+  border-color: #c0ddd0;
+  font-weight: 900;
+}
+
+.graph-viz-matrix-cell.filled {
+  color: #052017;
+  background: #dffced;
+  border-color: #a8d8c0;
+}
+
+.graph-viz-matrix-cell.active {
+  color: #052017;
+  background: #caffdf;
+  border-color: #21d89f;
+  box-shadow: 0 0 6px rgba(33, 216, 159, 0.3);
+}
+
+/* ------------------------------------------------------------------ */
 /*  Lesson page responsive                                             */
 /* ------------------------------------------------------------------ */
+
 
 @media (max-width: 980px) {
   .lesson-layout {

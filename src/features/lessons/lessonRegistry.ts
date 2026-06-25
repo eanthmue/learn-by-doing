@@ -5,6 +5,7 @@ import type { LessonCardEntry } from "./types";
 const availableSlugs = new Set([
   "array-traversal",
   "prefix-sums",
+  "graph-representations",
 ]);
 
 export const lessonCards: LessonCardEntry[] = curriculumLessonMetadata.map((metadata) => {
@@ -25,6 +26,12 @@ const lazyLessonLoaders: Record<string, () => Promise<{ default: React.Component
     default: () => {
       const Page = m.prefixSumsLesson.PageComponent;
       return React.createElement(Page, { lesson: m.prefixSumsLesson });
+    }
+  })),
+  "graph-representations": () => import("./lessons/graphRepresentations/graphRepresentations").then((m) => ({
+    default: () => {
+      const Page = m.graphRepresentationsLesson.PageComponent;
+      return React.createElement(Page, { lesson: m.graphRepresentationsLesson });
     }
   })),
 };

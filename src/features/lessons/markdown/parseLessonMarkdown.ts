@@ -118,7 +118,7 @@ function parseConcept(lines: string[]): LessonConceptSection[] {
   const finishSection = () => {
     pushParagraph(current, paragraphLines);
 
-    if (current.paragraphs.length > 0 || current.showArrayDiagram || current.pattern) {
+    if (current.paragraphs.length > 0 || current.showArrayDiagram || current.showGraphDiagram || current.pattern) {
       sections.push(current);
     }
   };
@@ -137,6 +137,19 @@ function parseConcept(lines: string[]): LessonConceptSection[] {
     if (line === "::: array-diagram") {
       pushParagraph(current, paragraphLines);
       current.showArrayDiagram = true;
+
+      while (index + 1 < lines.length && (lines[index + 1] ?? "").trim() !== ":::") {
+        index += 1;
+      }
+      index += 1;
+      finishSection();
+      current = { paragraphs: [] };
+      continue;
+    }
+
+    if (line === "::: graph-diagram") {
+      pushParagraph(current, paragraphLines);
+      current.showGraphDiagram = true;
 
       while (index + 1 < lines.length && (lines[index + 1] ?? "").trim() !== ":::") {
         index += 1;

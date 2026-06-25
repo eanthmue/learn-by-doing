@@ -78,6 +78,81 @@ function ArrayDiagram({ values }: { values: number[] }) {
   );
 }
 
+function decodeGraph(values: number[]) {
+  const numNodes = values[0] ?? 0;
+  const edges: [number, number][] = [];
+  for (let i = 1; i + 1 < values.length; i += 2) {
+    edges.push([values[i]!, values[i + 1]!]);
+  }
+  return { numNodes, edges };
+}
+
+function circleLayout(numNodes: number, cx: number, cy: number, radius: number) {
+  const positions: { x: number; y: number }[] = [];
+  for (let i = 0; i < numNodes; i++) {
+    const angle = (2 * Math.PI * i) / numNodes - Math.PI / 2;
+    positions.push({
+      x: cx + radius * Math.cos(angle),
+      y: cy + radius * Math.sin(angle),
+    });
+  }
+  return positions;
+}
+
+function GraphDiagram({ values }: { values: number[] }) {
+  const { numNodes, edges } = decodeGraph(values);
+  const svgSize = 220;
+  const center = svgSize / 2;
+  const radius = 80;
+  const positions = circleLayout(numNodes, center, center, radius);
+
+  return (
+    <div className="concept-diagram graph-viz-diagram" aria-label="Graph diagram">
+      <svg
+        viewBox={`0 0 ${svgSize} ${svgSize}`}
+        width={svgSize}
+        height={svgSize}
+        className="graph-viz-svg"
+      >
+        {edges.map(([a, b], i) => {
+          const pa = positions[a];
+          const pb = positions[b];
+          if (!pa || !pb) return null;
+          return (
+            <line
+              key={`edge-${i}`}
+              x1={pa.x}
+              y1={pa.y}
+              x2={pb.x}
+              y2={pb.y}
+              className="graph-viz-edge processed"
+            />
+          );
+        })}
+        {positions.map((pos, i) => (
+          <g key={`node-${i}`}>
+            <circle
+              cx={pos.x}
+              cy={pos.y}
+              r={18}
+              className="graph-viz-node touched"
+            />
+            <text
+              x={pos.x}
+              y={pos.y}
+              textAnchor="middle"
+              dominantBaseline="central"
+              className="graph-viz-node-label"
+            >
+              {i}
+            </text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
 function ConceptPanel({ lesson }: { lesson: LessonDefinition }) {
   const { content } = lesson;
 
@@ -106,6 +181,7 @@ function ConceptPanel({ lesson }: { lesson: LessonDefinition }) {
               <p key={paragraphIndex}><RichTextView content={paragraph} /></p>
             ))}
             {section.showArrayDiagram ? <ArrayDiagram values={lesson.exampleValues} /> : null}
+            {section.showGraphDiagram ? <GraphDiagram values={lesson.exampleValues} /> : null}
             {section.pattern ? (
               <div className="concept-pattern">
                 <span className="pattern-label">The Pattern</span>
