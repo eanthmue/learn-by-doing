@@ -7,12 +7,23 @@
 
 # Concept
 
-An **array** is a collection of values, where each value sits at a numbered position called an **index**. The first index is `0`, the second is `1`, and so on up to `length - 1`.
+## What is Array Traversal?
+
+Think of array traversal as reading a book page by page, from the very beginning to the end. Every time you turn to a new page, you update what you know about the story.
+
+If your input array is `arr = [4, 7, 2, 9, 1]`, traversing means we visit each number one by one to find something out—like their total sum.
+
+- Before looking at any numbers, your total is `0`.
+- After visiting the first number `4`, your total is `4`.
+- After visiting the next number `7`, your total is `11` (`4 + 7`).
+- After visiting `2`, your total is `13` (`11 + 2`).
+- After visiting `9`, your total is `22` (`13 + 9`).
+- Finally, after visiting `1`, your total is `23` (`22 + 1`).
 
 ::: array-diagram
 :::
 
-**Traversal** means visiting every element exactly once, usually from index `0` to the last index. During the visit you can read each value and combine it into a result: a sum, a maximum, a count, or sometimes a new array.
+When writing code to do this, you set a starting value (like `total = 0`), and then you loop through the array's positions (called **indices**) to update that value.
 
 ::: pattern
 let result = <initial value>
@@ -21,13 +32,38 @@ for each index i from 0 to length - 1:
 return result
 :::
 
-## When to use it
+## Why We Use a Starting Value
 
-Use a single-pass traversal whenever the answer depends on _every element_ and each element can be processed independently. If you only need part of the array or elements depend on far-away positions, a different pattern such as sliding window or two pointers may be more efficient, but traversal is almost always the first tool to reach for.
+Setting the right starting value is critical, and it depends on what you're trying to find.
 
-## The invariant
+Notice the mapping between what we want and how we start:
+- **Sum**: Start at `0` (adding `0` to a number doesn't change it).
+- **Count**: Start at `0` (you haven't seen anything yet).
+- **Maximum**: Start at a very small number like `-Infinity`.
 
-At the end of iteration `i`, `result` reflects the correct answer for the sub-array `array[0..i]`. When `i` reaches `length - 1`, `result` holds the answer for the entire array.
+If you were looking for the maximum value in `[-5, -10, -2]`, but you started your `max` at `0`, your code would falsely tell you the highest number is `0`—even though `0` isn't in the list! That's why we start `max` at `-Infinity` to ensure the very first number we read will always overwrite our starting value.
+
+## The Problem It Solves
+
+Imagine you have a list of 10,000 player scores, and you need to find the highest score. 
+
+**The Naive Way**: You manually check `scores[0]`, `scores[1]`, `scores[2]`, writing out 10,000 lines of code. This is impossible to maintain and breaks if the number of players changes.
+
+**The Scalable Way**: You write a single traversal loop that processes every score one by one. The code remains exactly the same whether you have 10 players or 10 million.
+
+## The Cost (Time vs. Space)
+
+**Time Cost**: You must visit every single element one by one. This means the time it takes grows directly with the size of the array, taking `O(n)` time.
+
+**Space Efficiency**: Because you only keep track of a single running value (like a sum or a max), you don't need to create any new arrays. It takes `O(1)` constant space, meaning it uses almost zero extra memory no matter how huge the input array is.
+
+## A Quick Rule of Thumb
+
+You should use a basic array traversal if your scenario meets these two conditions:
+- **You need to check everything:** The answer depends on looking at the entire array (like finding a sum, count, or maximum).
+- **Independent elements:** Processing one element doesn't require knowing about elements far ahead or behind it.
+
+If you only need to check a small part of the array, or if elements depend on each other (like finding pairs), other patterns like Sliding Window or Two Pointers will be better. But for simple aggregations, traversal is your best friend.
 
 # Complexity
 

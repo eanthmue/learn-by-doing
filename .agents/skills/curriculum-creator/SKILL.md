@@ -152,11 +152,14 @@ Before considering generated lesson content complete, run this review pass and f
 - Ensure examples, expected outputs, and variable names are consistent across content, code, and visualizer state.
 
 ### 3. Pedagogy
-- Teach the mental model before the implementation details.
-- State the invariant or decision rule in learner-friendly language, then connect it to the code.
-- Include one worked example that is small enough to trace by hand.
-- Include common mistakes that reflect realistic beginner errors, with a corrected version or explanation.
-- Keep each paragraph purposeful; remove filler, marketing language, and unsupported claims.
+- **Use Conversational Hooks:** Teach the mental model before the implementation details by starting explanations with intuitive, real-world analogies (e.g., "Think of array traversal as reading a book page by page...").
+- **Concrete Over Abstract:** Introduce a concrete example array/dataset with numbers immediately, rather than starting with abstract formulas or math variables. Keep the worked example small enough to trace by hand.
+- **Step-by-Step Tracing:** Walk through the concrete example step-by-step using bullet points, showing how the data changes explicitly at each step.
+- **Explain the "Why":** Demystify confusing patterns or edge cases (like "why is there a leading zero?" or "why do we initialize max to -Infinity?") in plain English, explaining what would happen if we didn't use them.
+- **Tradeoffs & Rules of Thumb:** When explaining *when* to use a pattern, explicitly outline "The Problem It Solves" (contrasting the naive way with the scalable way), explain the core tradeoff (e.g., upfront Time/Space cost vs. $O(1)$ payoff), and provide a quick, memorable rule of thumb.
+- **Avoid Academic Jargon:** Do not use formal terms like "invariant" or "monotonic" as a crutch. If you must introduce a formal term, define it using the concrete example first.
+- **Common Mistakes:** Include common mistakes that reflect realistic beginner errors, with a corrected version or explanation.
+- **Conciseness:** Keep each paragraph purposeful; remove filler, marketing language, and unsupported claims.
 
 ### 4. Visualizer Integrity
 - Build visualizer steps from explicit deterministic data only.

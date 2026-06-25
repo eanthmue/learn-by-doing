@@ -44,6 +44,14 @@ Lesson content should stay programming-language-neutral:
 
 - Do not include programming-language-specific concepts, syntax explanations, idioms, standard library details, or ecosystem references in lesson prose.
 
+Pedagogical Tone and Style (Crucial):
+
+- **Use Conversational Hooks:** Start explanations with intuitive, real-world analogies (e.g., "Think of X as Y...").
+- **Concrete Over Abstract:** Introduce a concrete example array/dataset with numbers immediately, rather than starting with abstract formulas or math variables.
+- **Step-by-Step Tracing:** Walk through the example step-by-step using bullet points, showing how the data changes explicitly at each step.
+- **Explain the "Why":** Demystify confusing patterns (like "why is there a leading zero?" or "why do we use two pointers?") in plain English, explaining what would happen if we didn't use them (e.g., "to prevent your code from crashing").
+- **Avoid Academic Jargon:** Do not use terms like "invariant" or "monotonic" as a crutch. If you must introduce a formal term, define it using the concrete example first.
+
 ## UI and UX
 
 - Keep the learning workspace calm, readable, and responsive.
