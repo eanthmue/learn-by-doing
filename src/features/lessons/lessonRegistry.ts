@@ -1,33 +1,44 @@
+import React, { lazy } from "react";
 import { curriculumLessonMetadata } from "./curriculum";
-import { arrayTraversalLesson } from "./lessons/arrayTraversal";
-import { prefixSumsLesson } from "./lessons/prefixSums";
-import type { LessonCardEntry, LessonDefinition } from "./types";
+import type { LessonCardEntry } from "./types";
 
-export const availableLessons: LessonDefinition[] = [
-  arrayTraversalLesson,
-  prefixSumsLesson,
-];
-
-const availableLessonsBySlug = new Map(availableLessons.map((lesson) => [lesson.slug, lesson]));
+const availableSlugs = new Set([
+  "array-traversal",
+  "prefix-sums",
+]);
 
 export const lessonCards: LessonCardEntry[] = curriculumLessonMetadata.map((metadata) => {
-  const availableLesson = availableLessonsBySlug.get(metadata.slug);
-
-  if (!availableLesson) {
-    return {
-      ...metadata,
-      available: false,
-    };
-  }
-
   return {
     ...metadata,
-    description: availableLesson.description,
-    tags: availableLesson.tags,
-    available: true,
+    available: availableSlugs.has(metadata.slug),
   };
 });
 
-export function getLessonByPath(path: string): LessonDefinition | undefined {
-  return availableLessons.find((lesson) => lesson.routePath === path);
+const lazyLessonLoaders: Record<string, () => Promise<{ default: React.ComponentType<any> }>> = {
+  "array-traversal": () => import("./lessons/arrayTraversal").then((m) => ({
+    default: () => {
+      const Page = m.arrayTraversalLesson.PageComponent;
+      return React.createElement(Page, { lesson: m.arrayTraversalLesson });
+    }
+  })),
+  "prefix-sums": () => import("./lessons/prefixSums").then((m) => ({
+    default: () => {
+      const Page = m.prefixSumsLesson.PageComponent;
+      return React.createElement(Page, { lesson: m.prefixSumsLesson });
+    }
+  })),
+};
+
+export const LessonComponents: Record<string, React.LazyExoticComponent<any>> = {};
+for (const slug of availableSlugs) {
+  if (lazyLessonLoaders[slug]) {
+    LessonComponents[slug] = lazy(lazyLessonLoaders[slug]);
+  }
+}
+
+export function getLessonSlugByPath(path: string): string | undefined {
+  if (path.startsWith("/lessons/")) {
+    return path.replace("/lessons/", "");
+  }
+  return undefined;
 }

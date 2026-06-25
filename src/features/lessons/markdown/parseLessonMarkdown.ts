@@ -19,8 +19,9 @@ const LESSON_SECTIONS = new Set<LessonMarkdownSection>([
   "Reflection",
 ]);
 
-function isLessonSection(value: string): value is LessonMarkdownSection {
-  return LESSON_SECTIONS.has(value as LessonMarkdownSection);
+function findLessonSection(value: string): LessonMarkdownSection | undefined {
+  const normalized = value.toLowerCase().trim();
+  return Array.from(LESSON_SECTIONS).find((s) => s.toLowerCase() === normalized);
 }
 
 function assertSection(lines: string[] | undefined, section: LessonMarkdownSection): string[] {
@@ -36,18 +37,22 @@ function splitTopLevelSections(markdown: string): SectionMap {
   let currentSection: LessonMarkdownSection | null = null;
 
   markdown.replace(/\r\n/g, "\n").split("\n").forEach((line) => {
-    const heading = line.match(/^# (.+)$/);
+    const heading = line.match(/^#+\s+(.+)$/);
 
     if (heading) {
       const title = heading[1]?.trim() ?? "";
+      const matchedSection = findLessonSection(title);
 
-      if (!isLessonSection(title)) {
-        throw new Error(`Unsupported lesson Markdown section: ${title}`);
+      if (matchedSection) {
+        currentSection = matchedSection;
+        sections[currentSection] = [];
+        return;
       }
 
-      currentSection = title;
-      sections[currentSection] = [];
-      return;
+      if (line.match(/^#\s/)) {
+        currentSection = null;
+        return;
+      }
     }
 
     if (currentSection) {
@@ -122,9 +127,9 @@ function parseConcept(lines: string[]): LessonConceptSection[] {
     const rawLine = lines[index] ?? "";
     const line = rawLine.trim();
 
-    if (line.startsWith("## ")) {
+    if (line.match(/^#+\s+/)) {
       finishSection();
-      current = { title: line.slice(3).trim(), paragraphs: [] };
+      current = { title: line.replace(/^#+\s+/, "").trim(), paragraphs: [] };
       paragraphLines = [];
       continue;
     }
@@ -233,17 +238,17 @@ function parseCommonMistakes(lines: string[]): LessonMistake[] {
   while (index < lines.length) {
     const titleLine = lines[index]?.trim() ?? "";
 
-    if (!titleLine.startsWith("## ")) {
+    if (!titleLine.match(/^#+\s+/)) {
       index += 1;
       continue;
     }
 
-    const title = titleLine.slice(3).trim();
+    const title = titleLine.replace(/^#+\s+/, "").trim();
     let badCode = "";
     let goodCode = "";
     index += 1;
 
-    while (index < lines.length && !(lines[index] ?? "").trim().startsWith("## ")) {
+    while (index < lines.length && !(lines[index] ?? "").trim().match(/^#+\s+/)) {
       const line = lines[index]?.trim() ?? "";
 
       if (line === "Bad:") {
@@ -288,13 +293,13 @@ function parseExamples(lines: string[]): LessonPracticeExample[] {
 }
 
 function parsePractice(lines: string[]): LessonContent["practice"] {
-  const titleLine = lines.find((line) => line.trim().startsWith("## "))?.trim();
+  const titleLine = lines.find((line) => line.trim().match(/^#+\s+/))?.trim();
 
   if (!titleLine) {
-    throw new Error("Practice section must include a level-two title.");
+    throw new Error("Practice section must include a heading.");
   }
 
-  const title = titleLine.slice(3).trim();
+  const title = titleLine.replace(/^#+\s+/, "").trim();
   const titleIndex = lines.findIndex((line) => line.trim() === titleLine);
   const bodyLines = lines.slice(titleIndex + 1);
   const examplesLabelIndex = bodyLines.findIndex((line) => line.trim() === "Examples:");

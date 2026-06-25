@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import "./index.css";
 import {
+  LessonComponents,
   curriculumStages,
-  getLessonByPath,
+  getLessonSlugByPath,
   lessonCards,
   type CurriculumModule,
   type CurriculumStage,
@@ -293,11 +294,15 @@ function LandingPage() {
 
 export function App() {
   const route = useRoute();
-  const lesson = getLessonByPath(route);
+  const slug = getLessonSlugByPath(route);
 
-  if (lesson) {
-    const LessonPage = lesson.PageComponent;
-    return <LessonPage lesson={lesson} />;
+  if (slug && LessonComponents[slug]) {
+    const LazyPage = LessonComponents[slug];
+    return (
+      <Suspense fallback={<div className="lesson-loading" style={{ padding: "2rem", color: "var(--text-secondary)" }}>Loading lesson...</div>}>
+        <LazyPage />
+      </Suspense>
+    );
   }
 
   return <LandingPage />;
