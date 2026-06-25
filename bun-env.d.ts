@@ -10,6 +10,11 @@ declare module "*.svg" {
 
 declare module "*.css" {}
 
+declare module "*.md" {
+  const content: string;
+  export default content;
+}
+
 declare module "*.module.css" {
   /**
    * A record of class names to their corresponding CSS module classes
