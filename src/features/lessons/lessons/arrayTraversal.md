@@ -7,7 +7,7 @@
 
 # Concept
 
-An **array** is a collection of values, where each value sits at a numbered position called an **index**. In JavaScript, the first index is `0`, the second is `1`, and so on up to `length - 1`.
+An **array** is a collection of values, where each value sits at a numbered position called an **index**. The first index is `0`, the second is `1`, and so on up to `length - 1`.
 
 ::: array-diagram
 :::

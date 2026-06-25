@@ -40,6 +40,10 @@ Each lesson should include:
 - Practice task with expected behavior.
 - Reflection prompt.
 
+Lesson content should stay programming-language-neutral:
+
+- Do not include programming-language-specific concepts, syntax explanations, idioms, standard library details, or ecosystem references in lesson prose.
+
 ## UI and UX
 
 - Keep the learning workspace calm, readable, and responsive.
