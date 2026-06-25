@@ -2,7 +2,16 @@ import { LessonPage } from "../LessonPage";
 import type { LessonContent, LessonDefinition, VisualizerStep } from "../types";
 import { ArrayTraversalVisualizer } from "../visualizers/ArrayTraversalVisualizer";
 
-const arrayTraversalStarterCode = `function sum(arr) {
+const arrayTraversalTraceCode = `function sum(arr) {
+  let total = 0;
+  for (let i = 0; i < arr.length; i++) {
+    total += arr[i];
+  }
+  return total;
+}`;
+
+const arrayTraversalStarterCode = `// Note: The visualizer panel to the right traces the execution of this sum function step-by-step.
+function sum(arr) {
   let total = 0;
   for (let i = 0; i < arr.length; i++) {
     total += arr[i];
@@ -52,7 +61,7 @@ const arrayTraversalContent: LessonContent = {
         [
           "An ",
           { strong: "array" },
-          " is an ordered list of values. Each value sits at a numbered position called an ",
+          " is a collection of values, where each value sits at a numbered position called an ",
           { strong: "index" },
           ". In JavaScript, the first index is ",
           { code: "0" },
@@ -71,7 +80,7 @@ const arrayTraversalContent: LessonContent = {
           { strong: "Traversal" },
           " means visiting every element exactly once, usually from index ",
           { code: "0" },
-          " to the last index. During the visit you can read each value and combine it into a result: a sum, a maximum, a count, or a new array.",
+          " to the last index. During the visit you can read each value and combine it into a result: a sum, a maximum, a count, or sometimes a new array.",
         ],
       ],
       pattern: `let result = <initial value>
@@ -114,7 +123,11 @@ return result`,
     time: "O(n)",
     timeReason: ["The loop visits each of the ", { code: "n" }, " elements exactly once."],
     space: "O(1)",
-    spaceReason: ["Only a single accumulator variable is stored regardless of input size."],
+    spaceReason: [
+      "The shown accumulator examples store only a single running value regardless of input size. Traversals that build a new output array use ",
+      { code: "O(n)" },
+      " output space.",
+    ],
   },
   commonMistakes: [
     {
@@ -162,7 +175,13 @@ return result`,
 
 function buildArrayTraversalSteps(values: number[]): VisualizerStep[] {
   const steps: VisualizerStep[] = [
-    { activeIndex: null, total: 0, description: "Initialize total = 0" },
+    {
+      activeIndex: null,
+      total: 0,
+      description: "Initialize total = 0",
+      codeLine: 2,
+      variables: { total: 0 },
+    },
   ];
   let running = 0;
 
@@ -172,6 +191,12 @@ function buildArrayTraversalSteps(values: number[]): VisualizerStep[] {
       activeIndex: index,
       total: running,
       description: `total += arr[${index}] (${value}) -> ${running}`,
+      codeLine: 4,
+      variables: {
+        i: index,
+        "arr[i]": value,
+        total: running,
+      },
     });
   });
 
@@ -179,6 +204,8 @@ function buildArrayTraversalSteps(values: number[]): VisualizerStep[] {
     activeIndex: null,
     total: running,
     description: `Done. Sum = ${running}`,
+    codeLine: 6,
+    variables: { total: running },
   });
 
   return steps;
@@ -199,6 +226,7 @@ export const arrayTraversalLesson: LessonDefinition = {
   tags: ["O(n)", "for loop", "accumulator"],
   available: true,
   routePath: "/lessons/array-traversal",
+  traceCode: arrayTraversalTraceCode,
   starterCode: arrayTraversalStarterCode,
   exampleValues: [4, 7, 2, 9, 1],
   content: arrayTraversalContent,

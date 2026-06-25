@@ -53,7 +53,10 @@ export function ArrayTraversalVisualizer({ values, steps, stepIndex, onStepIndex
   return (
     <div className="visualizer-panel" aria-label="Step-by-step visualizer">
       <div className="viz-header">
-        <span className="viz-title">Visualizer</span>
+        <div>
+          <span className="viz-title">Visualizer</span>
+          <span className="viz-step-count">Step {activeStepIndex + 1} of {steps.length}</span>
+        </div>
         <span className="viz-subtitle">Sum of [{values.join(", ")}]</span>
       </div>
 
@@ -79,8 +82,12 @@ export function ArrayTraversalVisualizer({ values, steps, stepIndex, onStepIndex
       <p className="viz-description">{current.description}</p>
 
       <div className="viz-controls">
-        <button onClick={() => goTo(0)} aria-label="Go to start" disabled={activeStepIndex === 0}>|&lt;</button>
-        <button onClick={() => goTo(activeStepIndex - 1)} aria-label="Previous step" disabled={activeStepIndex === 0}>&lt;</button>
+        <button onClick={() => goTo(0)} aria-label="Go to start" title="Go to start" disabled={activeStepIndex === 0}>
+          Start
+        </button>
+        <button onClick={() => goTo(activeStepIndex - 1)} aria-label="Previous step" title="Previous step" disabled={activeStepIndex === 0}>
+          Back
+        </button>
         <button
           onClick={() => {
             if (activeStepIndex >= steps.length - 1) {
@@ -89,11 +96,16 @@ export function ArrayTraversalVisualizer({ values, steps, stepIndex, onStepIndex
             setPlaying((wasPlaying) => !wasPlaying);
           }}
           aria-label={playing ? "Pause" : "Play"}
+          title={playing ? "Pause" : "Play"}
         >
           {playing ? "Pause" : "Play"}
         </button>
-        <button onClick={() => goTo(activeStepIndex + 1)} aria-label="Next step" disabled={activeStepIndex >= steps.length - 1}>&gt;</button>
-        <button onClick={() => goTo(steps.length - 1)} aria-label="Go to end" disabled={activeStepIndex >= steps.length - 1}>&gt;|</button>
+        <button onClick={() => goTo(activeStepIndex + 1)} aria-label="Next step" title="Next step" disabled={activeStepIndex >= steps.length - 1}>
+          Next
+        </button>
+        <button onClick={() => goTo(steps.length - 1)} aria-label="Go to end" title="Go to end" disabled={activeStepIndex >= steps.length - 1}>
+          End
+        </button>
       </div>
 
       <div className="viz-progress">
@@ -103,6 +115,7 @@ export function ArrayTraversalVisualizer({ values, steps, stepIndex, onStepIndex
             className={`viz-dot${index === activeStepIndex ? " active" : ""}${index < activeStepIndex ? " past" : ""}`}
             onClick={() => goTo(index)}
             aria-label={`Step ${index + 1}`}
+            title={`Step ${index + 1}`}
           />
         ))}
       </div>

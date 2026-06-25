@@ -89,6 +89,7 @@ export interface LessonPageProps {
 
 export interface LessonDefinition extends LessonCardEntry {
   routePath: string;
+  traceCode: string;
   starterCode: string;
   exampleValues: number[];
   content: LessonContent;

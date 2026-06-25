@@ -2,6 +2,20 @@ import { LessonPage } from "../LessonPage";
 import type { LessonContent, LessonDefinition, VisualizerStep } from "../types";
 import { PrefixSumsVisualizer } from "../visualizers/PrefixSumsVisualizer";
 
+const prefixSumsTraceCode = `function buildPrefixSums(nums) {
+  const prefix = [0];
+
+  for (let i = 0; i < nums.length; i++) {
+    prefix.push(prefix[i] + nums[i]);
+  }
+
+  return prefix;
+}
+
+function rangeSum(prefix, left, right) {
+  return prefix[right + 1] - prefix[left];
+}`;
+
 const prefixSumsStarterCode = `function buildPrefixSums(nums) {
   const prefix = [0];
 
@@ -70,6 +84,11 @@ const prefixSumsContent: LessonContent = {
           " is ",
           { code: "prefix[right + 1] - prefix[left]" },
           ".",
+        ],
+        [
+          "This formula assumes ",
+          { code: "0 <= left <= right < nums.length" },
+          ". The starter helper keeps the code focused by expecting valid query bounds.",
         ],
       ],
       pattern: `prefix = [0]
@@ -200,11 +219,29 @@ function buildPrefixSumSteps(values: number[]): VisualizerStep[] {
     });
   });
 
+  if (values.length === 0) {
+    steps.push({
+      activeIndex: null,
+      total: 0,
+      description: "No values means there is no valid inclusive range to query; the prefix array is [0].",
+      variables: {
+        prefix: "[0]",
+        result: 0,
+      },
+      prefixValues: [...prefixValues],
+      prefixIndex: null,
+    });
+
+    return steps;
+  }
+
+  const queryLeft = values.length > 3 ? 1 : 0;
+  const queryRight = values.length > 3 ? 3 : values.length - 1;
   const query = {
-    left: 1,
-    right: Math.min(3, Math.max(0, values.length - 1)),
-    startPrefixIndex: 1,
-    endPrefixIndex: Math.min(4, values.length),
+    left: queryLeft,
+    right: queryRight,
+    startPrefixIndex: queryLeft,
+    endPrefixIndex: queryRight + 1,
   };
   const result = (prefixValues[query.endPrefixIndex] ?? 0) - (prefixValues[query.startPrefixIndex] ?? 0);
 
@@ -255,6 +292,7 @@ export const prefixSumsLesson: LessonDefinition = {
   tags: ["O(n)", "precompute", "range query"],
   available: true,
   routePath: "/lessons/prefix-sums",
+  traceCode: prefixSumsTraceCode,
   starterCode: prefixSumsStarterCode,
   exampleValues: [3, -2, 5, 1, 6],
   content: prefixSumsContent,

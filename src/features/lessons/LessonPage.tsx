@@ -1,5 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { runUserCode } from "../sandbox";
+import { Fragment, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { LessonDefinition, LessonPageProps, RichText, TextSegment, VisualizerStep } from "./types";
 
 type LessonTab = "explanation" | "practice";
@@ -180,62 +179,14 @@ function ConceptPanel({ lesson }: { lesson: LessonDefinition }) {
   );
 }
 
-function CodeSandbox({ starterCode, traceStep }: { starterCode: string; traceStep: VisualizerStep | undefined }) {
-  const [code, setCode] = useState(starterCode);
-  const [output, setOutput] = useState<string[]>([]);
-  const [isRunning, setIsRunning] = useState(false);
-  const editorScrollRef = useRef<HTMLDivElement>(null);
-
-  const handleScroll = useCallback((event: React.UIEvent<HTMLTextAreaElement>) => {
-    if (editorScrollRef.current) {
-      editorScrollRef.current.scrollTop = event.currentTarget.scrollTop;
-      editorScrollRef.current.scrollLeft = event.currentTarget.scrollLeft;
-    }
-  }, []);
-
-  useEffect(() => {
-    setCode(starterCode);
-    setOutput([]);
-  }, [starterCode]);
-
-  const runCode = useCallback(async () => {
-    setIsRunning(true);
-    setOutput([]);
-
-    const result = await runUserCode(code);
-    if (result.error) {
-      setOutput([`${result.timedOut ? "Timeout" : "Error"}: ${result.error}`]);
-    } else {
-      setOutput(result.logs);
-    }
-
-    setIsRunning(false);
-  }, [code]);
-
-  const resetCode = useCallback(() => {
-    setCode(starterCode);
-    setOutput([]);
-  }, [starterCode]);
-
+function TraceCodePanel({ traceCode, traceStep }: { traceCode: string; traceStep: VisualizerStep | undefined }) {
   const traceVariables = traceStep?.variables ? Object.entries(traceStep.variables) : [];
 
   return (
-    <div className="sandbox-panel" aria-label="Code sandbox">
+    <div className="sandbox-panel" aria-label="Synchronized trace code">
       <div className="sandbox-toolbar">
-        <span className="sandbox-title">Code Sandbox</span>
-        <div className="sandbox-actions">
-          <button className="sandbox-btn reset" onClick={resetCode} aria-label="Reset code">
-            Reset
-          </button>
-          <button
-            className="sandbox-btn run"
-            onClick={runCode}
-            disabled={isRunning}
-            aria-label="Run code"
-          >
-            {isRunning ? "Running…" : "Run"}
-          </button>
-        </div>
+        <span className="sandbox-title">Trace Code</span>
+        <span className="sandbox-mode">Read-only</span>
       </div>
       {traceStep ? (
         <div className="trace-sync-panel" aria-label="Synchronized trace state">
@@ -256,22 +207,14 @@ function CodeSandbox({ starterCode, traceStep }: { starterCode: string; traceSte
           ) : null}
         </div>
       ) : null}
-      <div className="sandbox-output" aria-label="Console output" aria-live="polite">
-        <span className="output-label">Console</span>
-        {output.length > 0 ? (
-          output.map((line, index) => <pre key={`${index}-${line}`}>{line}</pre>)
-        ) : (
-          <pre className="output-placeholder">Click “Run” to see output</pre>
-        )}
-      </div>
-      <div className="code-editor-container">
-        <div className="code-highlight-overlay" aria-hidden="true" ref={editorScrollRef}>
-          {code.split("\n").map((line, i) => {
+      <div className="code-trace-container" tabIndex={0} aria-label="Read-only code matched to the visualizer">
+        <div className="code-highlight-overlay code-trace-lines">
+          {traceCode.split("\n").map((line, i) => {
             const isActive = traceStep?.codeLine === i + 1;
             return (
-              <div className={`code-line ${isActive ? "code-line-active" : ""}`} key={i}>
+              <div className={`code-line ${isActive ? "code-line-active" : ""}`} aria-current={isActive ? "step" : undefined} key={i}>
                 <span className="line-gutter">
-                  {isActive && <span className="debug-arrow">▶</span>}
+                  {isActive && <span className="debug-arrow">&gt;</span>}
                   <span className="line-number">{i + 1}</span>
                 </span>
                 <span className="line-content">{line || " "}</span>
@@ -279,17 +222,6 @@ function CodeSandbox({ starterCode, traceStep }: { starterCode: string; traceSte
             );
           })}
         </div>
-        <textarea
-          className="sandbox-editor code-editor-input"
-          name="lesson-code"
-          autoComplete="off"
-          value={code}
-          onChange={(event) => setCode(event.target.value)}
-          onScroll={handleScroll}
-          spellCheck={false}
-          aria-label="Edit code here"
-          wrap="off"
-        />
       </div>
     </div>
   );
@@ -360,7 +292,7 @@ export function LessonPage({ lesson }: LessonPageProps) {
         >
           <div className="lesson-workspace-split">
             <section id="lesson-code" className="lesson-workspace-section">
-              <CodeSandbox starterCode={lesson.starterCode} traceStep={currentTraceStep} />
+              <TraceCodePanel traceCode={lesson.traceCode} traceStep={currentTraceStep} />
             </section>
             <section id="lesson-visualizer" className="lesson-workspace-section">
               <Visualizer
