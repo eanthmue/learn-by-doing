@@ -15,13 +15,13 @@ export const lessonCards: LessonCardEntry[] = curriculumLessonMetadata.map((meta
 });
 
 const lazyLessonLoaders: Record<string, () => Promise<{ default: React.ComponentType<any> }>> = {
-  "array-traversal": () => import("./lessons/arrayTraversal").then((m) => ({
+  "array-traversal": () => import("./lessons/arrayTraversal/arrayTraversal").then((m) => ({
     default: () => {
       const Page = m.arrayTraversalLesson.PageComponent;
       return React.createElement(Page, { lesson: m.arrayTraversalLesson });
     }
   })),
-  "prefix-sums": () => import("./lessons/prefixSums").then((m) => ({
+  "prefix-sums": () => import("./lessons/prefixSums/prefixSums").then((m) => ({
     default: () => {
       const Page = m.prefixSumsLesson.PageComponent;
       return React.createElement(Page, { lesson: m.prefixSumsLesson });

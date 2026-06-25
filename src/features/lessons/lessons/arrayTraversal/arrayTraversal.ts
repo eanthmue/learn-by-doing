@@ -1,8 +1,9 @@
-import { LessonPage } from "../LessonPage";
-import { parseLessonMarkdown } from "../markdown/parseLessonMarkdown";
-import type { LessonDefinition, VisualizerStep } from "../types";
-import { ArrayTraversalVisualizer } from "../visualizers/ArrayTraversalVisualizer";
+import { LessonPage } from "../../LessonPage";
+import { parseLessonMarkdown } from "../../markdown/parseLessonMarkdown";
+import type { LessonDefinition, VisualizerStep } from "../../types";
+import { ArrayTraversalVisualizer } from "./ArrayTraversalVisualizer";
 import arrayTraversalMarkdown from "./arrayTraversal.md" with { type: "text" };
+
 
 const arrayTraversalTraceCode = `function sum(arr) {
   let total = 0;

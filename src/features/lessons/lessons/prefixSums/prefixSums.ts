@@ -1,8 +1,9 @@
-import { LessonPage } from "../LessonPage";
-import { parseLessonMarkdown } from "../markdown/parseLessonMarkdown";
-import type { LessonDefinition, VisualizerStep } from "../types";
+import { LessonPage } from "../../LessonPage";
+import { parseLessonMarkdown } from "../../markdown/parseLessonMarkdown";
+import type { LessonDefinition, VisualizerStep } from "../../types";
 import prefixSumsMarkdown from "./prefixSums.md" with { type: "text" };
-import { PrefixSumsVisualizer } from "../visualizers/PrefixSumsVisualizer";
+import { PrefixSumsVisualizer } from "./PrefixSumsVisualizer";
+
 
 const prefixSumsTraceCode = `function buildPrefixSums(nums) {
   const prefix = [0];

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { LessonVisualizerProps } from "../types";
+import type { LessonVisualizerProps } from "../../types";
 
 export function PrefixSumsVisualizer({ values, steps, stepIndex, onStepIndexChange }: LessonVisualizerProps) {
   const [playing, setPlaying] = useState(false);

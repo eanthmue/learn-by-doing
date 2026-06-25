@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import arrayTraversalMarkdown from "../lessons/arrayTraversal.md" with { type: "text" };
+import arrayTraversalMarkdown from "../lessons/arrayTraversal/arrayTraversal.md" with { type: "text" };
 import { parseLessonMarkdown } from "./parseLessonMarkdown";
 
 describe("parseLessonMarkdown", () => {
@@ -7,7 +7,7 @@ describe("parseLessonMarkdown", () => {
     const content = parseLessonMarkdown(arrayTraversalMarkdown);
 
     expect(content.learningGoals).toHaveLength(4);
-    expect(content.conceptSections).toHaveLength(4);
+    expect(content.conceptSections).toHaveLength(6);
     expect(content.conceptSections[0]?.showArrayDiagram).toBe(true);
     expect(content.conceptSections[1]?.pattern).toContain("let result = <initial value>");
     expect(content.complexity.time).toBe("O(n)");
