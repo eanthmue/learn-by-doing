@@ -396,10 +396,10 @@ export const curriculumStages: CurriculumStage[] = [
           },
           {
             slug: "graph-depth-first-search",
-            title: "Graph DFS",
+            title: "Graph Depth-First Search (DFS)",
             number: 28,
             lessonOrder: 2,
-            description: "Explore reachable nodes while maintaining a visited set.",
+            description: "Explore reachable nodes using Depth-First Search (DFS) while maintaining a visited set.",
             tags: ["DFS", "visited", "components"],
           },
           {

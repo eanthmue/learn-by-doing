@@ -6,6 +6,7 @@ const availableSlugs = new Set([
   "array-traversal",
   "prefix-sums",
   "graph-representations",
+  "graph-depth-first-search",
 ]);
 
 export const lessonCards: LessonCardEntry[] = curriculumLessonMetadata.map((metadata) => {
@@ -15,7 +16,7 @@ export const lessonCards: LessonCardEntry[] = curriculumLessonMetadata.map((meta
   };
 });
 
-const lazyLessonLoaders: Record<string, () => Promise<{ default: React.ComponentType<any> }>> = {
+const lazyLessonLoaders: Record<string, () => Promise<{ default: React.ComponentType }>> = {
   "array-traversal": () => import("./lessons/arrayTraversal/arrayTraversal").then((m) => ({
     default: () => {
       const Page = m.arrayTraversalLesson.PageComponent;
@@ -34,9 +35,15 @@ const lazyLessonLoaders: Record<string, () => Promise<{ default: React.Component
       return React.createElement(Page, { lesson: m.graphRepresentationsLesson });
     }
   })),
+  "graph-depth-first-search": () => import("./lessons/graphDepthFirstSearch/graphDepthFirstSearch").then((m) => ({
+    default: () => {
+      const Page = m.graphDepthFirstSearchLesson.PageComponent;
+      return React.createElement(Page, { lesson: m.graphDepthFirstSearchLesson });
+    }
+  })),
 };
 
-export const LessonComponents: Record<string, React.LazyExoticComponent<any>> = {};
+export const LessonComponents: Record<string, React.LazyExoticComponent<React.ComponentType>> = {};
 for (const slug of availableSlugs) {
   if (lazyLessonLoaders[slug]) {
     LessonComponents[slug] = lazy(lazyLessonLoaders[slug]);
