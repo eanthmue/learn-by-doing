@@ -404,11 +404,11 @@ export const curriculumStages: CurriculumStage[] = [
           },
           {
             slug: "graph-breadth-first-search",
-            title: "Graph BFS",
+            title: "Graph Breadth-First Search (BFS)",
             number: 29,
             lessonOrder: 3,
-            description: "Expand a frontier level by level for unweighted shortest paths.",
-            tags: ["BFS", "frontier", "shortest path"],
+            description: "Expand graph nodes level by level with a queue for unweighted shortest paths.",
+            tags: ["BFS", "queue", "shortest path"],
           },
           {
             slug: "weighted-graph-algorithms",

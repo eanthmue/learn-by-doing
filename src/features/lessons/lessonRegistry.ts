@@ -7,6 +7,7 @@ const availableSlugs = new Set([
   "prefix-sums",
   "graph-representations",
   "graph-depth-first-search",
+  "graph-breadth-first-search",
 ]);
 
 export const lessonCards: LessonCardEntry[] = curriculumLessonMetadata.map((metadata) => {
@@ -39,6 +40,12 @@ const lazyLessonLoaders: Record<string, () => Promise<{ default: React.Component
     default: () => {
       const Page = m.graphDepthFirstSearchLesson.PageComponent;
       return React.createElement(Page, { lesson: m.graphDepthFirstSearchLesson });
+    }
+  })),
+  "graph-breadth-first-search": () => import("./lessons/graphBreadthFirstSearch/graphBreadthFirstSearch").then((m) => ({
+    default: () => {
+      const Page = m.graphBreadthFirstSearchLesson.PageComponent;
+      return React.createElement(Page, { lesson: m.graphBreadthFirstSearchLesson });
     }
   })),
 };

@@ -2129,6 +2129,11 @@ button {
   stroke-width: 3;
 }
 
+.graph-viz-node.bfs-queued {
+  stroke: #5f8cff;
+  stroke-width: 3;
+}
+
 .dfs-viz-panel .graph-viz-diagram {
   margin-bottom: 12px;
 }
@@ -2177,6 +2182,12 @@ button {
   background: #fff5d8;
 }
 
+.dfs-pill.queue {
+  color: #0d244f;
+  border-color: #a8c0ff;
+  background: #eef3ff;
+}
+
 .dfs-empty {
   padding: 0 10px;
   color: #7aad96;
@@ -2190,6 +2201,52 @@ button {
 }
 
 .dfs-node-token.active {
+  border-color: #21d89f;
+  box-shadow: 0 0 0 2px rgba(33, 216, 159, 0.18);
+}
+
+.bfs-viz-panel .graph-viz-diagram {
+  margin-bottom: 12px;
+}
+
+.bfs-level-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(54px, 1fr));
+  gap: 6px;
+}
+
+.bfs-level-token {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid #dcebe3;
+  border-radius: 6px;
+  color: #45685a;
+  background: #ffffff;
+  font-family: "Cascadia Code", monospace;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.bfs-level-token strong {
+  color: #7aad96;
+  font-size: 0.72rem;
+}
+
+.bfs-level-token.visited {
+  color: #052017;
+  border-color: #a8d8c0;
+  background: #dffced;
+}
+
+.bfs-level-token.visited strong {
+  color: #346c56;
+}
+
+.bfs-level-token.active {
   border-color: #21d89f;
   box-shadow: 0 0 0 2px rgba(33, 216, 159, 0.18);
 }
