@@ -126,18 +126,26 @@ export const curriculumStages: CurriculumStage[] = [
             tags: ["O(n)", "bounds", "subarray"],
           },
           {
-            slug: "two-pointers",
-            title: "Two Pointers",
+            slug: "sliding-window-word-frequency",
+            title: "Sliding Window with Word Frequencies",
             number: 6,
             lessonOrder: 4,
+            description: "Scan a fixed-width event stream for a required bundle of words using window frequency counts.",
+            tags: ["O(n)", "hash map", "substring"],
+          },
+          {
+            slug: "two-pointers",
+            title: "Two Pointers",
+            number: 7,
+            lessonOrder: 5,
             description: "Move two indexes together to remove impossible pairs and converge on an answer.",
             tags: ["O(n)", "sorted input", "pair sum"],
           },
           {
             slug: "string-frequency",
             title: "String Frequency Maps",
-            number: 7,
-            lessonOrder: 5,
+            number: 8,
+            lessonOrder: 6,
             description: "Count characters to solve anagram, uniqueness, and first-occurrence questions.",
             tags: ["O(n)", "hash map", "counting"],
           },
@@ -155,7 +163,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "linked-list-traversal",
             title: "Singly Linked List Traversal",
-            number: 8,
+            number: 9,
             lessonOrder: 1,
             description: "Advance a current pointer through nodes while preserving traversal safety.",
             tags: ["nodes", "next", "O(n)"],
@@ -163,7 +171,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "linked-list-insert-delete",
             title: "Insert and Delete Nodes",
-            number: 9,
+            number: 10,
             lessonOrder: 2,
             description: "Rewire next pointers in the right order for insertion and deletion operations.",
             tags: ["pointers", "mutation", "references"],
@@ -171,7 +179,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "fast-slow-pointers",
             title: "Fast and Slow Pointers",
-            number: 10,
+            number: 11,
             lessonOrder: 3,
             description: "Use two moving references to find middles and detect cycles.",
             tags: ["cycle", "middle", "tortoise hare"],
@@ -190,7 +198,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "stack-basics",
             title: "Stack Basics",
-            number: 11,
+            number: 12,
             lessonOrder: 1,
             description: "Push, pop, and peek values from the same end to model nested state.",
             tags: ["LIFO", "parsing", "backtracking"],
@@ -198,7 +206,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "queue-basics",
             title: "Queue Basics",
-            number: 12,
+            number: 13,
             lessonOrder: 2,
             description: "Enqueue at the back and dequeue from the front to process work in arrival order.",
             tags: ["FIFO", "deque", "simulation"],
@@ -206,7 +214,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "priority-queue-basics",
             title: "Priority Queue Basics",
-            number: 13,
+            number: 14,
             lessonOrder: 3,
             description: "Select the next item by priority instead of insertion order.",
             tags: ["priority", "heap", "selection"],
@@ -233,7 +241,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "linear-search",
             title: "Linear Search",
-            number: 14,
+            number: 15,
             lessonOrder: 1,
             description: "Scan each candidate when the data has no searchable structure yet.",
             tags: ["O(n)", "scan", "predicate"],
@@ -241,7 +249,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "binary-search",
             title: "Binary Search",
-            number: 15,
+            number: 16,
             lessonOrder: 2,
             description: "Halve a sorted search space until the target or boundary condition is found.",
             tags: ["O(log n)", "sorted", "bounds"],
@@ -260,7 +268,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "bubble-selection-insertion-sort",
             title: "Quadratic Sorting Basics",
-            number: 16,
+            number: 17,
             lessonOrder: 1,
             description: "Use bubble, selection, and insertion sort as visual baselines for comparison sorting.",
             tags: ["O(n^2)", "swaps", "comparison"],
@@ -268,7 +276,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "merge-sort",
             title: "Merge Sort",
-            number: 17,
+            number: 18,
             lessonOrder: 2,
             description: "Split arrays, sort halves, and merge results in stable O(n log n) time.",
             tags: ["O(n log n)", "merge", "divide"],
@@ -276,7 +284,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "quick-sort",
             title: "Quick Sort Partitioning",
-            number: 18,
+            number: 19,
             lessonOrder: 3,
             description: "Partition around a pivot and recursively sort the remaining ranges.",
             tags: ["pivot", "partition", "divide"],
@@ -284,7 +292,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "heap-sort",
             title: "Heap Sort",
-            number: 19,
+            number: 20,
             lessonOrder: 4,
             description: "Use heap ordering to repeatedly select the next largest or smallest value.",
             tags: ["heap", "O(n log n)", "in-place"],
@@ -303,7 +311,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "hash-table-collisions",
             title: "Hash Tables and Collisions",
-            number: 20,
+            number: 21,
             lessonOrder: 1,
             description: "Store keys by hash and handle collisions with chaining or open addressing.",
             tags: ["hash", "collision", "amortized"],
@@ -311,7 +319,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "set-membership",
             title: "Set Membership",
-            number: 21,
+            number: 22,
             lessonOrder: 2,
             description: "Trade space for fast lookup when checking duplicates or intersections.",
             tags: ["set", "O(1)", "lookup"],
@@ -319,7 +327,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "hash-map-counting",
             title: "Hash Map Counting",
-            number: 22,
+            number: 23,
             lessonOrder: 3,
             description: "Track frequencies for anagrams, majorities, and grouped values.",
             tags: ["map", "frequency", "counting"],
@@ -346,7 +354,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "binary-tree-anatomy",
             title: "Binary Tree Anatomy",
-            number: 23,
+            number: 24,
             lessonOrder: 1,
             description: "Name roots, children, leaves, height, and tree representations.",
             tags: ["root", "children", "height"],
@@ -354,7 +362,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "tree-depth-first-traversal",
             title: "Tree Depth-First Traversal",
-            number: 24,
+            number: 25,
             lessonOrder: 2,
             description: "Compare preorder, inorder, and postorder recursive visit order.",
             tags: ["DFS", "recursion", "order"],
@@ -362,7 +370,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "tree-breadth-first-traversal",
             title: "Tree Breadth-First Traversal",
-            number: 25,
+            number: 26,
             lessonOrder: 3,
             description: "Use a queue to visit tree nodes level by level.",
             tags: ["BFS", "queue", "levels"],
@@ -370,7 +378,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "binary-search-trees",
             title: "Binary Search Trees",
-            number: 26,
+            number: 27,
             lessonOrder: 4,
             description: "Search, insert, and delete by preserving left/right ordering rules.",
             tags: ["BST", "search", "ordering"],
@@ -389,7 +397,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "graph-representations",
             title: "Graph Representations",
-            number: 27,
+            number: 28,
             lessonOrder: 1,
             description: "Convert edges into adjacency lists and matrices for traversal.",
             tags: ["nodes", "edges", "adjacency"],
@@ -397,7 +405,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "graph-depth-first-search",
             title: "Graph Depth-First Search (DFS)",
-            number: 28,
+            number: 29,
             lessonOrder: 2,
             description: "Explore reachable nodes using Depth-First Search (DFS) while maintaining a visited set.",
             tags: ["DFS", "visited", "components"],
@@ -405,7 +413,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "graph-breadth-first-search",
             title: "Graph Breadth-First Search (BFS)",
-            number: 29,
+            number: 30,
             lessonOrder: 3,
             description: "Expand graph nodes level by level with a queue for unweighted shortest paths.",
             tags: ["BFS", "queue", "shortest path"],
@@ -413,7 +421,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "weighted-graph-algorithms",
             title: "Weighted Graph Algorithms",
-            number: 30,
+            number: 31,
             lessonOrder: 4,
             description: "Use Dijkstra, Bellman-Ford, Prim, and Kruskal when edges carry cost.",
             tags: ["Dijkstra", "MST", "weights"],
@@ -432,7 +440,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "heap-shape-ordering",
             title: "Heap Shape and Ordering",
-            number: 31,
+            number: 32,
             lessonOrder: 1,
             description: "Connect the binary heap tree shape to its backing array representation.",
             tags: ["heap", "array", "priority"],
@@ -440,7 +448,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "heap-push-pop",
             title: "Heap Push and Pop",
-            number: 32,
+            number: 33,
             lessonOrder: 2,
             description: "Bubble up and sink down to keep heap order after updates.",
             tags: ["heapify", "bubble", "sink"],
@@ -467,7 +475,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "greedy-method",
             title: "Greedy Method",
-            number: 33,
+            number: 34,
             lessonOrder: 1,
             description: "Make locally optimal choices when an exchange argument makes them safe.",
             tags: ["greedy", "choice", "optimization"],
@@ -475,7 +483,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "divide-and-conquer",
             title: "Divide and Conquer",
-            number: 34,
+            number: 35,
             lessonOrder: 2,
             description: "Break a problem into independent subproblems and combine their answers.",
             tags: ["divide", "merge", "recursion"],
@@ -483,7 +491,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "backtracking-choices",
             title: "Backtracking Choices",
-            number: 35,
+            number: 36,
             lessonOrder: 3,
             description: "Choose, explore, and unchoose while pruning impossible branches.",
             tags: ["backtracking", "pruning", "search"],
@@ -491,7 +499,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "dynamic-programming-memoization",
             title: "Dynamic Programming: Memoization",
-            number: 36,
+            number: 37,
             lessonOrder: 4,
             description: "Cache repeated recursive answers to collapse duplicated work.",
             tags: ["DP", "memo", "cache"],
@@ -499,7 +507,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "dynamic-programming-tabulation",
             title: "Dynamic Programming: Tabulation",
-            number: 37,
+            number: 38,
             lessonOrder: 5,
             description: "Fill a table from base cases toward the final answer.",
             tags: ["DP", "table", "bottom-up"],
@@ -507,7 +515,7 @@ export const curriculumStages: CurriculumStage[] = [
           {
             slug: "two-dimensional-dp",
             title: "Two-Dimensional DP",
-            number: 38,
+            number: 39,
             lessonOrder: 6,
             description: "Represent subproblem dependencies across rows and columns.",
             tags: ["DP", "grid", "LCS"],

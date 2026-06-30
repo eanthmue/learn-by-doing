@@ -30,10 +30,36 @@ export interface VisualizerStep {
     endPrefixIndex: number;
     result?: number;
   };
+  windowRange?: {
+    left: number;
+    right: number;
+    size: number;
+    enteringIndex?: number | null;
+    leavingIndex?: number | null;
+    bestLeft?: number | null;
+    bestRight?: number | null;
+  };
+  wordWindow?: {
+    chunks: Array<{
+      index: number;
+      start: number;
+      value: string;
+    }>;
+    requiredCounts: Record<string, number>;
+    windowCounts: Record<string, number>;
+    offset: number;
+    wordLength: number;
+    leftStart: number;
+    rightStart: number;
+    matchedStarts: number[];
+    activeStart?: number | null | undefined;
+    enteringStart?: number | null | undefined;
+    leavingStart?: number | null | undefined;
+  };
 }
 
-export interface LessonVisualizerProps {
-  values: number[];
+export interface LessonVisualizerProps<TExampleValues = number[]> {
+  values: TExampleValues;
   steps: VisualizerStep[];
   stepIndex?: number;
   onStepIndexChange?: (index: number) => void;
@@ -84,19 +110,19 @@ export interface LessonContent {
   reflectionPrompt: RichText;
 }
 
-export interface LessonPageProps {
-  lesson: LessonDefinition;
+export interface LessonPageProps<TExampleValues = unknown> {
+  lesson: LessonDefinition<TExampleValues>;
 }
 
-export interface LessonDefinition extends LessonCardEntry {
+export interface LessonDefinition<TExampleValues = number[]> extends LessonCardEntry {
   routePath: string;
   traceCode: string;
   starterCode: string;
-  exampleValues: number[];
+  exampleValues: TExampleValues;
   content: LessonContent;
-  buildSteps: (values: number[]) => VisualizerStep[];
-  Visualizer: ComponentType<LessonVisualizerProps>;
-  PageComponent: ComponentType<LessonPageProps>;
+  buildSteps: (values: TExampleValues) => VisualizerStep[];
+  Visualizer: ComponentType<LessonVisualizerProps<TExampleValues>>;
+  PageComponent: ComponentType<LessonPageProps<TExampleValues>>;
 }
 
 export type RichTextRenderer = (content: RichText) => ReactNode;

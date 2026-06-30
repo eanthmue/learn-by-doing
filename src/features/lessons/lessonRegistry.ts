@@ -5,6 +5,8 @@ import type { LessonCardEntry } from "./types";
 const availableSlugs = new Set([
   "array-traversal",
   "prefix-sums",
+  "sliding-window",
+  "sliding-window-word-frequency",
   "graph-representations",
   "graph-depth-first-search",
   "graph-breadth-first-search",
@@ -28,6 +30,18 @@ const lazyLessonLoaders: Record<string, () => Promise<{ default: React.Component
     default: () => {
       const Page = m.prefixSumsLesson.PageComponent;
       return React.createElement(Page, { lesson: m.prefixSumsLesson });
+    }
+  })),
+  "sliding-window": () => import("./lessons/slidingWindow/slidingWindow").then((m) => ({
+    default: () => {
+      const Page = m.slidingWindowLesson.PageComponent;
+      return React.createElement(Page, { lesson: m.slidingWindowLesson });
+    }
+  })),
+  "sliding-window-word-frequency": () => import("./lessons/slidingWindowWordFrequency/slidingWindowWordFrequency").then((m) => ({
+    default: () => {
+      const Page = m.slidingWindowWordFrequencyLesson.PageComponent;
+      return React.createElement(Page, { lesson: m.slidingWindowWordFrequencyLesson });
     }
   })),
   "graph-representations": () => import("./lessons/graphRepresentations/graphRepresentations").then((m) => ({

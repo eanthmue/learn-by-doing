@@ -23,7 +23,8 @@ describe("lessonRegistry", () => {
     // e.g. "sliding-window" is in curriculum but not in availableLessons
     const slidingWindowCard = lessonCards.find((card) => card.slug === "sliding-window");
     expect(slidingWindowCard).toBeDefined();
-    expect(slidingWindowCard?.available).toBe(false);
+    expect(slidingWindowCard?.available).toBe(true);
+    expect(LessonComponents["sliding-window"]).toBeDefined();
   });
 
   test("getLessonSlugByPath extracts slugs correctly", () => {

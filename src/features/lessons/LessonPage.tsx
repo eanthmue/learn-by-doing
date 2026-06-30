@@ -31,7 +31,11 @@ function formatTraceValue(value: string | number | boolean | null) {
   return String(value);
 }
 
-function LessonNav({ lesson }: { lesson: LessonDefinition }) {
+function isNumberArray(values: unknown): values is number[] {
+  return Array.isArray(values) && values.every((value) => typeof value === "number");
+}
+
+function LessonNav<TExampleValues>({ lesson }: { lesson: LessonDefinition<TExampleValues> }) {
   const STAGE_SLUGS: Record<number, string> = {
     1: "foundations",
     2: "linear-data-structures",
@@ -153,7 +157,7 @@ function GraphDiagram({ values }: { values: number[] }) {
   );
 }
 
-function ConceptPanel({ lesson }: { lesson: LessonDefinition }) {
+function ConceptPanel<TExampleValues>({ lesson }: { lesson: LessonDefinition<TExampleValues> }) {
   const { content } = lesson;
 
   return (
@@ -180,8 +184,8 @@ function ConceptPanel({ lesson }: { lesson: LessonDefinition }) {
             {section.paragraphs.map((paragraph, paragraphIndex) => (
               <p key={paragraphIndex}><RichTextView content={paragraph} /></p>
             ))}
-            {section.showArrayDiagram ? <ArrayDiagram values={lesson.exampleValues} /> : null}
-            {section.showGraphDiagram ? <GraphDiagram values={lesson.exampleValues} /> : null}
+            {section.showArrayDiagram && isNumberArray(lesson.exampleValues) ? <ArrayDiagram values={lesson.exampleValues} /> : null}
+            {section.showGraphDiagram && isNumberArray(lesson.exampleValues) ? <GraphDiagram values={lesson.exampleValues} /> : null}
             {section.pattern ? (
               <div className="concept-pattern">
                 <span className="pattern-label">The Pattern</span>
@@ -303,7 +307,7 @@ function TraceCodePanel({ traceCode, traceStep }: { traceCode: string; traceStep
   );
 }
 
-export function LessonPage({ lesson }: LessonPageProps) {
+export function LessonPage<TExampleValues>({ lesson }: LessonPageProps<TExampleValues>) {
   const steps = useMemo(
     () => lesson.buildSteps(lesson.exampleValues),
     [lesson],
