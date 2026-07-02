@@ -56,6 +56,12 @@ export interface VisualizerStep {
     enteringStart?: number | null | undefined;
     leavingStart?: number | null | undefined;
   };
+  mapReduce?: {
+    phase: "map" | "reduce" | "done";
+    mappedValues: Array<number | null>;
+    accumulator: number | null;
+    activeMappedIndex: number | null;
+  };
 }
 
 export interface LessonVisualizerProps<TExampleValues = number[]> {

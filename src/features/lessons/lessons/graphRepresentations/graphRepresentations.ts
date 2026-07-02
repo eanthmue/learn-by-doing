@@ -164,7 +164,7 @@ export const graphRepresentationsLesson: LessonDefinition = {
   module: "Graphs",
   moduleSlug: "graphs",
   moduleOrder: 2,
-  number: 27,
+  number: 29,
   lessonOrder: 1,
   description: "Convert edges into adjacency lists and matrices for traversal.",
   tags: ["nodes", "edges", "adjacency"],

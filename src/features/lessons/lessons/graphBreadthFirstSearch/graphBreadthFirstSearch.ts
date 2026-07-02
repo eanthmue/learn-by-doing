@@ -379,7 +379,7 @@ export const graphBreadthFirstSearchLesson: LessonDefinition = {
   module: "Graphs",
   moduleSlug: "graphs",
   moduleOrder: 2,
-  number: 29,
+  number: 31,
   lessonOrder: 3,
   description: "Expand graph nodes level by level with a queue for unweighted shortest paths.",
   tags: ["BFS", "queue", "shortest path"],

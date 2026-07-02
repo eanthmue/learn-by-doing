@@ -8,7 +8,7 @@ describe("graphBreadthFirstSearchLesson", () => {
   test("lesson definition attributes", () => {
     expect(graphBreadthFirstSearchLesson.slug).toBe("graph-breadth-first-search");
     expect(graphBreadthFirstSearchLesson.available).toBe(true);
-    expect(graphBreadthFirstSearchLesson.number).toBe(29);
+    expect(graphBreadthFirstSearchLesson.number).toBe(31);
     expect(graphBreadthFirstSearchLesson.stage).toBe("Non-Linear Data Structures");
     expect(graphBreadthFirstSearchLesson.module).toBe("Graphs");
   });

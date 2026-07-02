@@ -5,7 +5,7 @@ describe("graphRepresentationsLesson", () => {
   test("lesson definition attributes", () => {
     expect(graphRepresentationsLesson.slug).toBe("graph-representations");
     expect(graphRepresentationsLesson.available).toBe(true);
-    expect(graphRepresentationsLesson.number).toBe(27);
+    expect(graphRepresentationsLesson.number).toBe(29);
     expect(graphRepresentationsLesson.stage).toBe("Non-Linear Data Structures");
     expect(graphRepresentationsLesson.module).toBe("Graphs");
   });

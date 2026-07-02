@@ -300,7 +300,7 @@ export const graphDepthFirstSearchLesson: LessonDefinition = {
   module: "Graphs",
   moduleSlug: "graphs",
   moduleOrder: 2,
-  number: 28,
+  number: 30,
   lessonOrder: 2,
   description: "Explore reachable nodes using Depth-First Search (DFS) while maintaining a visited set.",
   tags: ["DFS", "visited", "components"],

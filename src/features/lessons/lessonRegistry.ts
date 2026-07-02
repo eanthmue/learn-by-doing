@@ -7,6 +7,7 @@ const availableSlugs = new Set([
   "prefix-sums",
   "sliding-window",
   "sliding-window-word-frequency",
+  "map-reduce",
   "graph-representations",
   "graph-depth-first-search",
   "graph-breadth-first-search",
@@ -42,6 +43,12 @@ const lazyLessonLoaders: Record<string, () => Promise<{ default: React.Component
     default: () => {
       const Page = m.slidingWindowWordFrequencyLesson.PageComponent;
       return React.createElement(Page, { lesson: m.slidingWindowWordFrequencyLesson });
+    }
+  })),
+  "map-reduce": () => import("./lessons/mapReduce/mapReduce").then((m) => ({
+    default: () => {
+      const Page = m.mapReduceLesson.PageComponent;
+      return React.createElement(Page, { lesson: m.mapReduceLesson });
     }
   })),
   "graph-representations": () => import("./lessons/graphRepresentations/graphRepresentations").then((m) => ({

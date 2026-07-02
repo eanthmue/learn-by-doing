@@ -2090,6 +2090,10 @@ button {
   font-size: 1rem;
 }
 
+.map-reduce-formula {
+  margin: 20px 0;
+}
+
 .viz-result-bar {
   display: flex;
   align-items: center;
