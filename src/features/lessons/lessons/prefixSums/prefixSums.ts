@@ -1,6 +1,6 @@
 import { LessonPage } from "../../LessonPage";
 import { parseLessonMarkdown } from "../../markdown/parseLessonMarkdown";
-import type { LessonDefinition, VisualizerStep } from "../../types";
+import type { TraceLessonDefinition, VisualizerStep } from "../../types";
 import prefixSumsMarkdown from "./prefixSums.md" with { type: "text" };
 import { PrefixSumsVisualizer } from "./PrefixSumsVisualizer";
 
@@ -146,7 +146,7 @@ function buildPrefixSumSteps(values: number[]): VisualizerStep[] {
 
   return steps;
 }
-export const prefixSumsLesson: LessonDefinition = {
+export const prefixSumsLesson: TraceLessonDefinition = {
   slug: "prefix-sums",
   title: "Prefix Sums",
   stage: "Linear Data Structures",

@@ -1,4 +1,4 @@
-import type { LessonConceptSection, LessonContent, LessonMistake, LessonPracticeExample, RichText } from "../types";
+import type { AlgorithmLessonContent, LessonComplexity, LessonConceptSection, LessonContent, LessonMistake, LessonPracticeExample, RichText } from "../types";
 
 type SectionMap = Partial<Record<LessonMarkdownSection, string[]>>;
 
@@ -196,7 +196,7 @@ function parseTableCells(line: string): string[] {
     .map((cell) => cell.trim());
 }
 
-function parseComplexity(lines: string[]): LessonContent["complexity"] {
+function parseComplexity(lines: string[]): LessonComplexity {
   const rows = lines
     .map((line) => line.trim())
     .filter((line) => line.startsWith("|") && !/^\|\s*-/.test(line))
@@ -331,7 +331,7 @@ function parseReflection(lines: string[]): RichText {
   return parseInlineMarkdown(lines.map((line) => line.trim()).filter(Boolean).join(" "));
 }
 
-export function parseLessonMarkdown(markdown: string): LessonContent {
+export function parseLessonMarkdown(markdown: string): AlgorithmLessonContent {
   const sections = splitTopLevelSections(markdown);
 
   return {

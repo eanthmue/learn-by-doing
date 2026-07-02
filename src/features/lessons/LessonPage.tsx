@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useMemo, useState, type ReactNode } from "react";
-import type { LessonDefinition, LessonPageProps, RichText, TextSegment, VisualizerStep } from "./types";
+import type { LessonActivity, LessonDefinition, LessonPageProps, RichText, TextSegment, TraceVisualizerActivity, VisualizerStep } from "./types";
 
 type LessonTab = "explanation" | "practice";
 
@@ -33,6 +33,30 @@ function formatTraceValue(value: string | number | boolean | null) {
 
 function isNumberArray(values: unknown): values is number[] {
   return Array.isArray(values) && values.every((value) => typeof value === "number");
+}
+
+function getTraceActivity<TExampleValues>(
+  lesson: LessonDefinition<TExampleValues>,
+): TraceVisualizerActivity<TExampleValues> | undefined {
+  const traceActivity = lesson.activities?.find(
+    (activity): activity is TraceVisualizerActivity<TExampleValues> => activity.kind === "trace-visualizer",
+  );
+
+  if (traceActivity) {
+    return traceActivity;
+  }
+
+  if (lesson.traceCode && lesson.exampleValues !== undefined && lesson.buildSteps && lesson.Visualizer) {
+    return {
+      kind: "trace-visualizer",
+      traceCode: lesson.traceCode,
+      example: lesson.exampleValues,
+      buildSteps: lesson.buildSteps,
+      Visualizer: lesson.Visualizer,
+    };
+  }
+
+  return undefined;
 }
 
 function LessonNav<TExampleValues>({ lesson }: { lesson: LessonDefinition<TExampleValues> }) {
@@ -196,26 +220,28 @@ function ConceptPanel<TExampleValues>({ lesson }: { lesson: LessonDefinition<TEx
         ))}
       </section>
 
-      <section className="concept-body" aria-labelledby="complexity-title">
-        <h2 id="complexity-title">Complexity</h2>
-        <table className="complexity-table">
-          <thead>
-            <tr><th>Metric</th><th>Value</th><th>Reason</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Time</td>
-              <td><strong>{content.complexity.time}</strong></td>
-              <td><RichTextView content={content.complexity.timeReason} /></td>
-            </tr>
-            <tr>
-              <td>Space</td>
-              <td><strong>{content.complexity.space}</strong></td>
-              <td><RichTextView content={content.complexity.spaceReason} /></td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+      {content.complexity ? (
+        <section className="concept-body" aria-labelledby="complexity-title">
+          <h2 id="complexity-title">Complexity</h2>
+          <table className="complexity-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th><th>Reason</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Time</td>
+                <td><strong>{content.complexity.time}</strong></td>
+                <td><RichTextView content={content.complexity.timeReason} /></td>
+              </tr>
+              <tr>
+                <td>Space</td>
+                <td><strong>{content.complexity.space}</strong></td>
+                <td><RichTextView content={content.complexity.spaceReason} /></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      ) : null}
 
       <section className="concept-body" aria-labelledby="mistakes-title">
         <h2 id="mistakes-title">Common Mistakes</h2>
@@ -259,6 +285,88 @@ function ConceptPanel<TExampleValues>({ lesson }: { lesson: LessonDefinition<TEx
   );
 }
 
+function ActivityOverview<TExampleValues>({ activities }: { activities: LessonActivity<TExampleValues>[] }) {
+  if (activities.length === 0) {
+    return (
+      <section className="concept-body">
+        <h2>Practice</h2>
+        <p>This lesson does not have an interactive activity yet.</p>
+      </section>
+    );
+  }
+
+  return (
+    <div className="concept-panel">
+      {activities.map((activity, index) => {
+        if (activity.kind === "trace-visualizer") {
+          return null;
+        }
+
+        if (activity.kind === "code-lab") {
+          return (
+            <section className="concept-body" key={`${activity.kind}-${activity.title}-${index}`}>
+              <h2>{activity.title}</h2>
+              <pre className="concept-pattern"><code>{activity.starterCode}</code></pre>
+              {activity.expectedOutput?.length ? (
+                <div className="practice-examples">
+                  {activity.expectedOutput.map((output) => <code key={output}>{output}</code>)}
+                </div>
+              ) : null}
+            </section>
+          );
+        }
+
+        if (activity.kind === "quiz") {
+          return (
+            <section className="concept-body" key={`${activity.kind}-${activity.title}-${index}`}>
+              <h2>{activity.title}</h2>
+              {activity.questions.map((question, questionIndex) => (
+                <div className="practice-card" key={questionIndex}>
+                  <p><RichTextView content={question.prompt} /></p>
+                  <ol>
+                    {question.choices.map((choice) => <li key={choice}>{choice}</li>)}
+                  </ol>
+                </div>
+              ))}
+            </section>
+          );
+        }
+
+        if (activity.kind === "reflection") {
+          return (
+            <section className="concept-body" key={`${activity.kind}-${activity.title}-${index}`}>
+              <h2>{activity.title}</h2>
+              <blockquote className="reflection-quote"><RichTextView content={activity.prompt} /></blockquote>
+            </section>
+          );
+        }
+
+        if (activity.kind === "reading") {
+          return (
+            <section className="concept-body" key={`${activity.kind}-${activity.title}-${index}`}>
+              <h2>{activity.title}</h2>
+              {activity.sections.map((section, sectionIndex) => (
+                <div key={section.title ?? sectionIndex}>
+                  {section.title ? <h3>{section.title}</h3> : null}
+                  {section.paragraphs.map((paragraph, paragraphIndex) => (
+                    <p key={paragraphIndex}><RichTextView content={paragraph} /></p>
+                  ))}
+                </div>
+              ))}
+            </section>
+          );
+        }
+
+        return (
+          <section className="concept-body" key={`${activity.kind}-${activity.title}-${index}`}>
+            <h2>{activity.title}</h2>
+            <p>{activity.diagramType} diagram activity</p>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
 function TraceCodePanel({ traceCode, traceStep }: { traceCode: string; traceStep: VisualizerStep | undefined }) {
   const traceVariables = traceStep?.variables ? Object.entries(traceStep.variables) : [];
 
@@ -308,11 +416,12 @@ function TraceCodePanel({ traceCode, traceStep }: { traceCode: string; traceStep
 }
 
 export function LessonPage<TExampleValues>({ lesson }: LessonPageProps<TExampleValues>) {
+  const traceActivity = useMemo(() => getTraceActivity(lesson), [lesson]);
   const steps = useMemo(
-    () => lesson.buildSteps(lesson.exampleValues),
-    [lesson],
+    () => traceActivity?.buildSteps(traceActivity.example) ?? [],
+    [traceActivity],
   );
-  const Visualizer = lesson.Visualizer;
+  const Visualizer = traceActivity?.Visualizer;
   const [activeTab, setActiveTab] = useState<LessonTab>("explanation");
   const [traceStepIndex, setTraceStepIndex] = useState(0);
   const currentTraceStep = steps[traceStepIndex] ?? steps[0];
@@ -350,7 +459,7 @@ export function LessonPage<TExampleValues>({ lesson }: LessonPageProps<TExampleV
           className={activeTab === "practice" ? "active" : ""}
           onClick={() => setActiveTab("practice")}
         >
-          Code + Visualizer
+          Practice
         </button>
       </nav>
       <main className="lesson-layout" id="lesson-main">
@@ -370,19 +479,23 @@ export function LessonPage<TExampleValues>({ lesson }: LessonPageProps<TExampleV
           aria-labelledby="lesson-tab-practice"
           hidden={activeTab !== "practice"}
         >
-          <div className="lesson-workspace-split">
-            <section id="lesson-code" className="lesson-workspace-section">
-              <TraceCodePanel traceCode={lesson.traceCode} traceStep={currentTraceStep} />
-            </section>
-            <section id="lesson-visualizer" className="lesson-workspace-section">
-              <Visualizer
-                values={lesson.exampleValues}
-                steps={steps}
-                stepIndex={traceStepIndex}
-                onStepIndexChange={setTraceStepIndex}
-              />
-            </section>
-          </div>
+          {traceActivity && Visualizer ? (
+            <div className="lesson-workspace-split">
+              <section id="lesson-code" className="lesson-workspace-section">
+                <TraceCodePanel traceCode={traceActivity.traceCode} traceStep={currentTraceStep} />
+              </section>
+              <section id="lesson-visualizer" className="lesson-workspace-section">
+                <Visualizer
+                  values={traceActivity.example}
+                  steps={steps}
+                  stepIndex={traceStepIndex}
+                  onStepIndexChange={setTraceStepIndex}
+                />
+              </section>
+            </div>
+          ) : (
+            <ActivityOverview activities={lesson.activities ?? []} />
+          )}
         </section>
       </main>
     </div>

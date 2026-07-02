@@ -1,6 +1,6 @@
 import { LessonPage } from "../../LessonPage";
 import { parseLessonMarkdown } from "../../markdown/parseLessonMarkdown";
-import type { LessonDefinition, VisualizerStep } from "../../types";
+import type { TraceLessonDefinition, VisualizerStep } from "../../types";
 import graphBreadthFirstSearchMarkdown from "./graphBreadthFirstSearch.md" with { type: "text" };
 import { GraphBreadthFirstSearchVisualizer } from "./GraphBreadthFirstSearchVisualizer";
 
@@ -371,7 +371,7 @@ export function buildGraphBreadthFirstSearchSteps(values: number[]): VisualizerS
   return steps;
 }
 
-export const graphBreadthFirstSearchLesson: LessonDefinition = {
+export const graphBreadthFirstSearchLesson: TraceLessonDefinition = {
   slug: "graph-breadth-first-search",
   title: "Graph Breadth-First Search (BFS)",
   stage: "Non-Linear Data Structures",

@@ -1,6 +1,6 @@
 import { LessonPage } from "../../LessonPage";
 import { parseLessonMarkdown } from "../../markdown/parseLessonMarkdown";
-import type { LessonDefinition, VisualizerStep } from "../../types";
+import type { TraceLessonDefinition, VisualizerStep } from "../../types";
 import { SlidingWindowVisualizer } from "./SlidingWindowVisualizer";
 import slidingWindowMarkdown from "./slidingWindow.md" with { type: "text" };
 
@@ -266,7 +266,7 @@ function buildSlidingWindowSteps(values: number[]): VisualizerStep[] {
   return steps;
 }
 
-export const slidingWindowLesson: LessonDefinition = {
+export const slidingWindowLesson: TraceLessonDefinition = {
   slug: "sliding-window",
   title: "Sliding Window",
   stage: "Linear Data Structures",

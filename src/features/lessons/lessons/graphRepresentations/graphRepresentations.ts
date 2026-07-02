@@ -1,6 +1,6 @@
 import { LessonPage } from "../../LessonPage";
 import { parseLessonMarkdown } from "../../markdown/parseLessonMarkdown";
-import type { LessonDefinition, VisualizerStep } from "../../types";
+import type { TraceLessonDefinition, VisualizerStep } from "../../types";
 import graphRepresentationsMarkdown from "./graphRepresentations.md" with { type: "text" };
 import { GraphRepresentationsVisualizer } from "./GraphRepresentationsVisualizer";
 
@@ -156,7 +156,7 @@ export function buildGraphRepresentationSteps(values: number[]): VisualizerStep[
   return steps;
 }
 
-export const graphRepresentationsLesson: LessonDefinition = {
+export const graphRepresentationsLesson: TraceLessonDefinition = {
   slug: "graph-representations",
   title: "Graph Representations",
   stage: "Non-Linear Data Structures",

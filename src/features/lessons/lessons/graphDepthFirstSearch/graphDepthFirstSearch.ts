@@ -1,6 +1,6 @@
 import { LessonPage } from "../../LessonPage";
 import { parseLessonMarkdown } from "../../markdown/parseLessonMarkdown";
-import type { LessonDefinition, VisualizerStep } from "../../types";
+import type { TraceLessonDefinition, VisualizerStep } from "../../types";
 import graphDepthFirstSearchMarkdown from "./graphDepthFirstSearch.md" with { type: "text" };
 import { GraphDepthFirstSearchVisualizer } from "./GraphDepthFirstSearchVisualizer";
 
@@ -292,7 +292,7 @@ export function buildGraphDepthFirstSearchSteps(values: number[]): VisualizerSte
   return steps;
 }
 
-export const graphDepthFirstSearchLesson: LessonDefinition = {
+export const graphDepthFirstSearchLesson: TraceLessonDefinition = {
   slug: "graph-depth-first-search",
   title: "Graph Depth-First Search (DFS)",
   stage: "Non-Linear Data Structures",

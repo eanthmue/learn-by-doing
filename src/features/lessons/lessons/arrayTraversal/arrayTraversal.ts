@@ -1,6 +1,6 @@
 import { LessonPage } from "../../LessonPage";
 import { parseLessonMarkdown } from "../../markdown/parseLessonMarkdown";
-import type { LessonDefinition, VisualizerStep } from "../../types";
+import type { TraceLessonDefinition, VisualizerStep } from "../../types";
 import { ArrayTraversalVisualizer } from "./ArrayTraversalVisualizer";
 import arrayTraversalMarkdown from "./arrayTraversal.md" with { type: "text" };
 
@@ -91,7 +91,7 @@ function buildArrayTraversalSteps(values: number[]): VisualizerStep[] {
   return steps;
 }
 
-export const arrayTraversalLesson: LessonDefinition = {
+export const arrayTraversalLesson: TraceLessonDefinition = {
   slug: "array-traversal",
   title: "Array Traversal and Indexing",
   stage: "Linear Data Structures",

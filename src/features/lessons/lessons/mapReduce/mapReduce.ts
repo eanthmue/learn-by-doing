@@ -1,6 +1,6 @@
 import { LessonPage } from "../../LessonPage";
 import { parseLessonMarkdown } from "../../markdown/parseLessonMarkdown";
-import type { LessonDefinition, VisualizerStep } from "../../types";
+import type { TraceLessonDefinition, VisualizerStep } from "../../types";
 import { MapReduceVisualizer } from "./MapReduceVisualizer";
 import mapReduceMarkdown from "./mapReduce.md" with { type: "text" };
 
@@ -158,7 +158,7 @@ export function buildMapReduceSteps(values: number[]): VisualizerStep[] {
   return steps;
 }
 
-export const mapReduceLesson: LessonDefinition = {
+export const mapReduceLesson: TraceLessonDefinition = {
   slug: "map-reduce",
   title: "Map and Reduce",
   stage: "Linear Data Structures",

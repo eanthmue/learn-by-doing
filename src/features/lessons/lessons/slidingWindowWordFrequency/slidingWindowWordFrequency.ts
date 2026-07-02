@@ -1,6 +1,6 @@
 import { LessonPage } from "../../LessonPage";
 import { parseLessonMarkdown } from "../../markdown/parseLessonMarkdown";
-import type { LessonDefinition, VisualizerStep } from "../../types";
+import type { TraceLessonDefinition, VisualizerStep } from "../../types";
 import { SlidingWindowWordFrequencyVisualizer } from "./SlidingWindowWordFrequencyVisualizer";
 import slidingWindowWordFrequencyMarkdown from "./slidingWindowWordFrequency.md" with { type: "text" };
 
@@ -424,7 +424,7 @@ export function buildSlidingWindowWordFrequencySteps(example: WordBundleExample)
   return steps;
 }
 
-export const slidingWindowWordFrequencyLesson: LessonDefinition<WordBundleExample> = {
+export const slidingWindowWordFrequencyLesson: TraceLessonDefinition<WordBundleExample> = {
   slug: "sliding-window-word-frequency",
   title: "Sliding Window with Word Frequencies",
   stage: "Linear Data Structures",
